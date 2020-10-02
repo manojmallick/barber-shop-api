@@ -1,0 +1,42 @@
+version: '3.1'
+
+services:
+  barber-shop-api-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/app'
+      - './logs/prod:/home/docker/app/logs'
+    ports:
+      - '8088:8088'
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_DB_HOST=${DB_HOST}
+      - MONGO_DB_PORT=${DB_PORT}
+      - MONGO_DB_USERNAME=${DB_USERNAME}
+      - MONGO_DB_PASSWORD=${DB_PASSWORD}
+      - MONGO_DB_DATABASE=${DB_DATABASE}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - APP_PORT=${APP_PORT}
+#    secrets:
+#      - MONGO_DB_USERNAME
+#      - MONGO_DB_PASSWORD
+#    env_file:
+#      - .env
+  mongodb:
+    image: mongo:4.2.5
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
+      - MONGO_INITDB_DATABASE=${DB_DATABASE}
+    volumes:
+      - ./docker/garrage/init-scripts:/docker-entrypoint-initdb.d:ro
+#secrets:
+#  MONGO_DB_USERNAME:
+#    external: true
+#  MONGO_DB_PASSWORD:
+#    external: true

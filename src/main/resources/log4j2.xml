@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="baseDir">logs</Property>
+        <Property name="app">barber-shop-api</Property>
+        <Property name="LOG_PATTERN">%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="LogToConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="${sys:LOG_PATTERN}"/>
+        </Console>
+        <RollingFile name="RollingFile" fileName="${baseDir}/${app}.log" filePattern="${baseDir}/%d{yyyy-MM}{UTC}/%d{yyyy-MM-dd}{UTC}/${app}-%d{yyyy-MM-dd-HH}{UTC}-%i.log.gz">
+            <PatternLayout pattern="${sys:LOG_PATTERN}" charset="UTF-8"/>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="200 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${baseDir}" maxDepth="3">
+                    <IfFileName glob="**/${app}-*.log.gz" />
+                    <IfLastModified age="60d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <Async name="AsyncRollingFile">
+            <AppenderRef ref="RollingFile"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="AsyncRollingFile"/>
+            <AppenderRef ref="LogToConsole"/>
+        </Root>
+        <Logger name="com.ing.barber.shop.api" level="debug" additivity="false">
+            <AppenderRef ref="AsyncRollingFile"/>
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Logger name="org.springframework" level="debug" additivity="false">
+            <AppenderRef ref="AsyncRollingFile"/>
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
+    </Loggers>
+</Configuration>
