@@ -34,7 +34,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
       - MONGO_INITDB_DATABASE=${DB_DATABASE}
     volumes:
-      - ./docker/garrage/init-scripts:/docker-entrypoint-initdb.d:ro
+      - ./mongo/barber/init-scripts:/docker-entrypoint-initdb.d:ro
 #secrets:
 #  MONGO_DB_USERNAME:
 #    external: true
