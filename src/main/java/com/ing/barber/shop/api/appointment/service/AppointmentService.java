@@ -2,8 +2,6 @@ package com.ing.barber.shop.api.appointment.service;
 
 import com.ing.barber.shop.api.appointment.model.Appointment;
 import com.ing.barber.shop.api.appointment.repo.AppointmentRepository;
-import com.ing.barber.shop.api.customer.model.Customer;
-import com.ing.barber.shop.api.customer.repo.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,7 @@ public class AppointmentService {
     private AppointmentRepository appointmentRepository;
 
     @Transactional
-    public void createAppointment(Appointment appointment){
+    public void saveAppointment(Appointment appointment){
         appointmentRepository.save(appointment);
     }
-
 }

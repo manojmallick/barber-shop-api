@@ -1,19 +1,25 @@
 package com.ing.barber.shop.api.barber.model;
 
+import com.ing.barber.shop.api.beans.Schedule;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document
+@Document(value = "barbers")
 public class Barber {
     @Id
-    public String id;
-    public String name;
-    public int experience;
-    public String avatar;
+    private String id;
+    private String name;
+    private int experience;
+    private String avatar;
+    @Field(value = "schedules")
+    private List<Schedule> schedules;
 }

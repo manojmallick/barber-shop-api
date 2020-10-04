@@ -1,23 +1,24 @@
 package com.ing.barber.shop.api.services.service;
 
-import com.ing.barber.shop.api.customer.model.Customer;
-import com.ing.barber.shop.api.customer.repo.CustomerRepository;
+import com.ing.barber.shop.api.services.model.Service;
+import com.ing.barber.shop.api.services.repo.ServicesRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+import java.util.List;
+
+@org.springframework.stereotype.Service
 @Slf4j
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class ServicesService {
 
-    private CustomerRepository customerRepository;
+    private ServicesRepository servicesRepository;
 
     @Transactional
-    public void createCustomer(Customer customer){
-        customerRepository.save(customer);
+    public List<Service> getAllServices(){
+        return servicesRepository.findAll();
     }
 
 }
