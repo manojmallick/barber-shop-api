@@ -2,6 +2,7 @@ package com.ing.barber.shop.api.appointment.service;
 
 import com.ing.barber.shop.api.appointment.model.Appointment;
 import com.ing.barber.shop.api.appointment.repo.AppointmentRepository;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class AppointmentService {
-    private AppointmentRepository appointmentRepository;
 
-    @Transactional
-    public void saveAppointment(Appointment appointment){
-        appointmentRepository.save(appointment);
-    }
+  private AppointmentRepository appointmentRepository;
+
+  @Transactional
+  public void saveAppointment(Appointment appointment) {
+    appointmentRepository.save(appointment);
+  }
+
+  public List<Appointment> getAllAppointments() {
+    return appointmentRepository.findAll();
+  }
+
 }

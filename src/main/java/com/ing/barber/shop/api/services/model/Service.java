@@ -11,9 +11,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Document(value = "services")
 public class Service {
-    @Id
-    private String id;
-    private String name;
-    private double amount;
-    private ServiceType type;
+
+  @Id
+  private String id;
+  private String name;
+  private double amount;
+  private ServiceType type;
 }

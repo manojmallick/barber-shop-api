@@ -8,8 +8,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories
 public class BarberShopApiApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BarberShopApiApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(BarberShopApiApplication.class, args);
+  }
 
 }

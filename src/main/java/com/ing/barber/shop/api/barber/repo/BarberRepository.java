@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BarberRepository extends MongoRepository<Barber, String> {
+
 }

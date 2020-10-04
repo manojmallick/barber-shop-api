@@ -1,15 +1,18 @@
 package com.ing.barber.shop.api.availability;
 
-import com.ing.barber.shop.api.appointment.model.Appointment;
-import com.ing.barber.shop.api.availability.json.Availability;
 import com.ing.barber.shop.api.availability.service.AvailabilityService;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
+import javax.validation.constraints.FutureOrPresent;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -17,10 +20,13 @@ import java.util.List;
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class AvailabilityController {
 
-    private AvailabilityService availabilityService;
+  private AvailabilityService availabilityService;
 
-    @GetMapping
-    public List<Availability> getAllAvailabilityByDate(){
-        return availabilityService.getAllAvailabilityByDate(new Date());
-    }
+  @GetMapping
+  public Map<String, Set<String>> getAllAvailabilityByDate(
+      @RequestParam(required = true) @FutureOrPresent @DateTimeFormat(pattern = "yyyy-MM-dd") Date bookingDate,
+      @RequestParam(required = false) @FutureOrPresent @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate)
+      throws ParseException {
+    return availabilityService.getAllAvailabilityByDate(bookingDate, endDate);
+  }
 }
