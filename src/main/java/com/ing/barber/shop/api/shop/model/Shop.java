@@ -1,6 +1,7 @@
 package com.ing.barber.shop.api.shop.model;
 
 import com.ing.barber.shop.api.beans.Schedule;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Shop {
 
   @Id
+  @ApiModelProperty(notes="id is mandatory",required = true)
   private String id;
   private String name;
   private String address;

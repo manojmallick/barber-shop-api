@@ -1,5 +1,7 @@
 package com.ing.barber.shop.api.beans;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -10,15 +12,24 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(description="Customer")
 public class Customer {
 
+
+  @ApiModelProperty(notes="name is mandatory",required = true)
   @NotEmpty(message = "name can't be empty.")
   public String name;
+
+  @ApiModelProperty(notes="gender is mandatory",required = true)
   @NotEmpty(message = "gender can't be empty.")
   public String gender;
+
   @Email
-  @Size(max = 100, message = "Email id must be less than 100 characters.")
+  @Size(max = 100, message = "Email must be less than 100 characters.")
+  @ApiModelProperty(notes="Email is mandatory & to be valid and less than 100 characters",required = true)
   public String email;
+
   @NotEmpty(message = "mobile number can't be empty.")
+  @ApiModelProperty(notes="Mobile number mandatory",required = true)
   public String mobile;
 }

@@ -71,12 +71,24 @@ public class AvailabilityService {
           .stream()
           .filter(s -> s.getDayOfWeek().equalsIgnoreCase(Day.values()[dayOfWeek - 1].toString()))
           .collect(Collectors.toList());
+      String lastBookingSlot = getLastBookingSlot(schedules);
       timeSlots = getFormattedDate(schedules.get(0).getStartTime(),
-          schedules.get(0).getEndTime(), HH_MM, Calendar.MINUTE, 30);
+          lastBookingSlot, HH_MM, Calendar.MINUTE, 30);
     } catch (ParseException e) {
       e.printStackTrace();
     }
     return timeSlots;
+  }
+
+
+  private String getLastBookingSlot(List<Schedule> schedules) throws ParseException {
+    Calendar calendar = GregorianCalendar.getInstance();
+    SimpleDateFormat sdf = new SimpleDateFormat(HH_MM);
+    Date endDate = sdf.parse(schedules.get(0).getEndTime());
+    calendar.setTime(endDate);
+    calendar.add(Calendar.MINUTE, -30);
+    String lastBookingSlot=sdf.format(calendar.getTime());
+    return lastBookingSlot;
   }
 
   private Set<String> getFormattedDate(String startTime, String endTime, String format,

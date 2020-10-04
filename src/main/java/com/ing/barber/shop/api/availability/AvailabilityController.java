@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
+import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ public class AvailabilityController {
 
   @GetMapping
   public Map<String, Set<String>> getAllAvailabilityByDate(
-      @RequestParam(required = true) @FutureOrPresent @DateTimeFormat(pattern = "yyyy-MM-dd") Date bookingDate,
-      @RequestParam(required = false) @FutureOrPresent @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate)
+      @RequestParam()  @DateTimeFormat(pattern = "yyyy-MM-dd")Date bookingDate,
+      @RequestParam(required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate)
       throws ParseException {
     return availabilityService.getAllAvailabilityByDate(bookingDate, endDate);
   }
