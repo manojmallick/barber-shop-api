@@ -7,6 +7,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
 import com.ing.barber.shop.api.appointment.model.Appointment;
 import com.ing.barber.shop.api.appointment.repo.AppointmentRepository;
@@ -80,6 +82,7 @@ public class AppointmentServiceTest {
 
     //method call
     appointmentService.saveAppointment(appointmentRequest);
+
   }
 
 
@@ -243,6 +246,7 @@ public class AppointmentServiceTest {
     exceptionRule.expectMessage(is(BarberShopApiConstants.NO_BARBER_AVAILABLE_FOR_BOOKING));
     //method call
     appointmentService.saveAppointment(appointmentRequest);
+
   }
 
   @Test
@@ -273,11 +277,10 @@ public class AppointmentServiceTest {
     when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
 
     //method call
-    Appointment actualAppointment = appointmentService.saveAppointment(appointmentRequest);
+     appointmentService.saveAppointment(appointmentRequest);
 
-    //assert
-    assertNotNull(actualAppointment);
-    assertThat(actualAppointment.getId(), is(appointment.getId()));
+    //verify
+    verify(appointmentRepository,times(1)).save(appointmentRequest);
 
   }
 

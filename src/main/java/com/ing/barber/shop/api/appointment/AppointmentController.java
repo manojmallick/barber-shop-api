@@ -9,10 +9,12 @@ import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,11 +31,12 @@ public class AppointmentController {
       produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
   @ApiOperation(value = "save appointment",
       notes = "Returns the confirmed appointment details")
-  public Appointment saveAppointment(@RequestBody @Valid Appointment appointment,
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void saveAppointment(@RequestBody @Valid Appointment appointment,
       HttpServletRequest httpRequest) {
     log.info("Made request to get All Availability ByDate API. [url={}]",
         httpRequest.getRequestURI());
-    return appointmentService.saveAppointment(appointment);
+     appointmentService.saveAppointment(appointment);
   }
 
 

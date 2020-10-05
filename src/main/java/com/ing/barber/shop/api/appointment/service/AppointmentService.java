@@ -41,7 +41,7 @@ public class AppointmentService {
   private ShopRepository shopRepository;
 
   @Transactional
-  public Appointment saveAppointment(Appointment appointment) throws GenericApiException {
+  public void saveAppointment(Appointment appointment) throws GenericApiException {
     //Check if the startTime available with not present(considering)
 
     Optional<Shop> shop = shopRepository.findById(appointment.getShop().getId());
@@ -94,7 +94,7 @@ public class AppointmentService {
       throw new GenericApiException(BarberShopApiConstants.NO_BARBER_AVAILABLE_FOR_BOOKING,
           HttpStatus.BAD_REQUEST, ErrorCodes.ERROR_FEATURE_NOT_AVAILABLE);
     }
-    return appointmentRepository.save(appointment);
+     appointmentRepository.save(appointment);
   }
 
   private List<Barber> getAvailableBarbers(List<Appointment> appointments, List<Barber> barbers) {
