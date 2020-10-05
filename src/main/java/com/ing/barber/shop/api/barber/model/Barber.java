@@ -2,6 +2,7 @@ package com.ing.barber.shop.api.barber.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ing.barber.shop.api.beans.Schedule;
+import com.ing.barber.shop.api.validators.ValidBarber;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
@@ -16,11 +17,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(value = "barbers")
-@ApiModel(description="Customer")
+@ApiModel(description = "Customer")
 public class Barber {
 
   @Id
-  @ApiModelProperty(notes="id is mandatory",required = true)
+  @ApiModelProperty(notes = "id is mandatory only while booking for a barber", required = false)
+  @ValidBarber
   private String id;
   private String name;
   private int experience;

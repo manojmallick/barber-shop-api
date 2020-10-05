@@ -1,8 +1,10 @@
 package com.ing.barber.shop.api.shop.model;
 
 import com.ing.barber.shop.api.beans.Schedule;
+import com.ing.barber.shop.api.validators.ValidShop;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
+import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +19,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Shop {
 
   @Id
-  @ApiModelProperty(notes="id is mandatory",required = true)
+  @ApiModelProperty(notes = "id is mandatory", required = true)
+  @NotEmpty(message = "id can't be empty.")
+  @ValidShop
   private String id;
   private String name;
   private String address;

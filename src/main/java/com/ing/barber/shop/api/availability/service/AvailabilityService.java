@@ -2,19 +2,20 @@ package com.ing.barber.shop.api.availability.service;
 
 import com.ing.barber.shop.api.appointment.model.Appointment;
 import com.ing.barber.shop.api.appointment.repo.AppointmentRepository;
-import com.ing.barber.shop.api.beans.Day;
-import com.ing.barber.shop.api.beans.Schedule;
+import com.ing.barber.shop.api.barber.model.Barber;
+import com.ing.barber.shop.api.barber.repo.BarberRepository;
+import com.ing.barber.shop.api.error.ResourceNotFoundException;
 import com.ing.barber.shop.api.shop.model.Shop;
 import com.ing.barber.shop.api.shop.repo.ShopRepository;
-import java.text.ParseException;
+import com.ing.barber.shop.api.util.BarberShopApiConstants;
+import com.ing.barber.shop.api.util.BarberShopApiUtil;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -27,87 +28,51 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class AvailabilityService {
 
-  public static final String YYYY_MM_DD = "yyyy-MM-dd";
-  public static final String HH_MM = "HH:mm";
   private AppointmentRepository appointmentRepository;
   private ShopRepository shopRepository;
+  private BarberRepository barberRepository;
+  private BarberShopApiUtil barberShopApiUtil;
 
-  public Map<String, Set<String>> getAllAvailabilityByDate(Date bookingDate, Date endDate)
-      throws ParseException {
+  public Map<String, Set<String>> getAllAvailabilityByDate(LocalDate bookingDate, LocalDate endDate,
+      String shopId) {
     endDate = endDate == null ? bookingDate : endDate;
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(YYYY_MM_DD);
-    Shop shop = shopRepository.findAll().get(0);
-    Set<String> dateSlots = getFormattedDate(simpleDateFormat.format(bookingDate),
-        simpleDateFormat.format(endDate), YYYY_MM_DD, Calendar.DATE, 1);
-    List<Appointment> appointments = appointmentRepository
-        .findAllAppointmentByScheduleDayOfWeek(bookingDate, endDate);
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(BarberShopApiConstants.YYYY_MM_DD);
+    Optional<Shop> shop = shopRepository.findById(shopId);
+    List<Barber> barbers = barberRepository.findAll();
 
+    Set<String> dateSlots = barberShopApiUtil.getFormattedDate(bookingDate.toString(),
+        endDate.toString(), BarberShopApiConstants.YYYY_MM_DD, Calendar.DATE, 1);
+    List<Appointment> appointments = appointmentRepository
+        .findAllAppointmentByBookingDateAndEndDate(bookingDate, endDate);
+
+    if (!shop.isPresent()) {
+      throw new ResourceNotFoundException("Shop not found");
+    }
     Map<String, Set<String>> dateSetMap = new LinkedHashMap<>();
     dateSlots.stream().forEach(
         dateSlot -> {
-          Set<String> finalTimeslots = getTimeSlots(simpleDateFormat, shop, dateSlot);
-          appointments.stream().filter(appointment -> dateSlot
-              .equalsIgnoreCase(simpleDateFormat.format(appointment.getBookingDate()))).forEach(
-              appointment -> {
-                finalTimeslots.remove(appointment.getStartTime());
-              }
-          );
+          Set<String> finalTimeslots = barberShopApiUtil
+              .getTimeSlots(simpleDateFormat, shop.get(), dateSlot);
+          List<Appointment> currentAppointment = filterAppointmentsWithDateSlot(
+              appointments, dateSlot);
+          //size check is enough since unique check is in place
+          if (currentAppointment.size() == barbers.size()) {
+            finalTimeslots.remove(currentAppointment.get(0).getBookingDate().toString());
+          }
           dateSetMap.put(dateSlot, finalTimeslots);
         }
     );
     return dateSetMap;
-
   }
 
 
-  private Set<String> getTimeSlots(SimpleDateFormat simpleDateFormat, Shop shop, String dateSlot) {
-    Set<String> timeSlots = null;
-    try {
-      Calendar c = GregorianCalendar.getInstance();
-      c.setTime(simpleDateFormat.parse(dateSlot));
-      int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-
-      List<Schedule> schedules = shop.getSchedules()
-          .stream()
-          .filter(s -> s.getDayOfWeek().equalsIgnoreCase(Day.values()[dayOfWeek - 1].toString()))
-          .collect(Collectors.toList());
-      String lastBookingSlot = getLastBookingSlot(schedules);
-      timeSlots = getFormattedDate(schedules.get(0).getStartTime(),
-          lastBookingSlot, HH_MM, Calendar.MINUTE, 30);
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
-    return timeSlots;
+  private List<Appointment> filterAppointmentsWithDateSlot(List<Appointment> appointments,
+      String dateSlot) {
+    List<Appointment> currentAppointment = appointments.stream()
+        .filter(appointment -> dateSlot
+            .equalsIgnoreCase(appointment.getBookingDate().toString()))
+        .collect(Collectors.toList());
+    return currentAppointment;
   }
 
-
-  private String getLastBookingSlot(List<Schedule> schedules) throws ParseException {
-    Calendar calendar = GregorianCalendar.getInstance();
-    SimpleDateFormat sdf = new SimpleDateFormat(HH_MM);
-    Date endDate = sdf.parse(schedules.get(0).getEndTime());
-    calendar.setTime(endDate);
-    calendar.add(Calendar.MINUTE, -30);
-    String lastBookingSlot=sdf.format(calendar.getTime());
-    return lastBookingSlot;
-  }
-
-  private Set<String> getFormattedDate(String startTime, String endTime, String format,
-      int calendarType, int slot) throws ParseException {
-    SimpleDateFormat sdf = new SimpleDateFormat(format);
-    Date startDate = sdf.parse(startTime);
-    Date endDate = sdf.parse(endTime);
-
-    Set<String> range = new LinkedHashSet<>();
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setTime(startDate);
-
-    if (calendar.getTime().before(endDate) || calendar.getTime().equals(endDate)) {
-      range.add(sdf.format(calendar.getTime()));
-      while (calendar.getTime().before(endDate)) {
-        calendar.add(calendarType, slot);
-        range.add(sdf.format(calendar.getTime()));
-      }
-    }
-    return range;
-  }
 }
