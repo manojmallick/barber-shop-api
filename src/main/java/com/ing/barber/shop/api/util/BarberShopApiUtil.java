@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class BarberShopApiUtil {
 
-private ApplicationProperties applicationProperties;
+  private ApplicationProperties applicationProperties;
 
   public Set<String> getTimeSlots(SimpleDateFormat simpleDateFormat, Shop shop, String dateSlot) {
     Set<String> timeSlots = null;
@@ -55,7 +55,8 @@ private ApplicationProperties applicationProperties;
     try {
       endDate = sdf.parse(schedules.get(0).getEndTime());
     } catch (ParseException e) {
-      throw new GenericApiException(BarberShopApiConstants.ERROR_WHILE_RETRIEVING_LAST_BOOKING_SLOTS,
+      throw new GenericApiException(
+          BarberShopApiConstants.ERROR_WHILE_RETRIEVING_LAST_BOOKING_SLOTS,
           HttpStatus.BAD_REQUEST, ErrorCodes.ERROR_WHILE_PARSING);
     }
     calendar.setTime(endDate);

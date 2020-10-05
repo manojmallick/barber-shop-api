@@ -14,5 +14,6 @@ public class BarberShopApiConstants {
   public static final String ERROR_WHILE_PARSING_TIME_SLOTS = "Error while parsing time slots";
   public static final String ERROR_WHILE_RETRIEVING_LAST_BOOKING_SLOTS = "Error while retrieving last booking slots";
   public static final String ERROR_WHILE_PARSING_START_TIME_END_TIME = "Error while parsing start time & end time";
+  public static final String SHOP_NOT_FOUND = "Shop not found";
 
 }

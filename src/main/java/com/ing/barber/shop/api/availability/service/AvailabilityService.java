@@ -46,7 +46,7 @@ public class AvailabilityService {
         .findAllAppointmentByBookingDateAndEndDate(bookingDate, endDate);
 
     if (!shop.isPresent()) {
-      throw new ResourceNotFoundException("Shop not found");
+      throw new ResourceNotFoundException(BarberShopApiConstants.SHOP_NOT_FOUND);
     }
     Map<String, Set<String>> dateSetMap = new LinkedHashMap<>();
     dateSlots.stream().forEach(

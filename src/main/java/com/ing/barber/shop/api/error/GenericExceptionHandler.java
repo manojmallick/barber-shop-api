@@ -150,7 +150,7 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
     details.add(ex.getMessage());
 
     ApiError err = new ApiError(LocalDateTime.now(), ErrorCodes.ERROR_RESOURCE_EXIST.getCode(),
-        ex.getClass().getSimpleName(), HttpStatus.BAD_REQUEST, "Resource exists",
+        ex.getClass().getSimpleName(), HttpStatus.BAD_REQUEST, "mapping exception",
         details);
 
     return ResponseEntityBuilder.build(err);

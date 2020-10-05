@@ -100,7 +100,7 @@ public class AppointmentService {
   private List<Barber> getAvailableBarbers(List<Appointment> appointments, List<Barber> barbers) {
     return barbers.stream().filter(
         barber -> appointments.stream().filter(
-            appointment1 -> appointment1.getBarber().getId().equalsIgnoreCase(barber.getId()))
+            appointment -> appointment.getBarber().getId().equalsIgnoreCase(barber.getId()))
             .count() == 0
     ).collect(Collectors.toList());
   }
