@@ -1,13 +1,13 @@
 package com.ing.barber.shop.api;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+/** The type Barber shop api application tests. */
 @SpringBootTest
 class BarberShopApiApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+  /** Context loads. */
+  @Test
+  void contextLoads() {}
 }
