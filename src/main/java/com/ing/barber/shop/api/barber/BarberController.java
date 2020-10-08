@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * The type Barber controller.
- */
+/** The type Barber controller. */
 @RestController
 @RequestMapping("/v1/barbers")
 @AllArgsConstructor(onConstructor_ = {@Autowired})
@@ -34,5 +32,4 @@ public class BarberController {
     log.info("Made request to get All Barbers API. [url={}]", httpRequest.getRequestURI());
     return barberService.getAllBarbers();
   }
-
 }

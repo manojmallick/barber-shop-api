@@ -20,9 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-/**
- * The type Barber shop api util.
- */
+/** The type Barber shop api util. */
 @Component
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class BarberShopApiUtil {
@@ -33,28 +31,36 @@ public class BarberShopApiUtil {
    * Gets time slots.
    *
    * @param simpleDateFormat the simple date format
-   * @param shop             the shop
-   * @param dateSlot         the date slot
+   * @param shop the shop
+   * @param slot the  slot(can be time or date)
    * @return the time slots
    */
-  public Set<String> getTimeSlots(SimpleDateFormat simpleDateFormat, Shop shop, String dateSlot) {
+  public Set<String> getTimeSlots(SimpleDateFormat simpleDateFormat, Shop shop, String slot) {
     Set<String> timeSlots = null;
     try {
       Calendar c = GregorianCalendar.getInstance();
-      c.setTime(simpleDateFormat.parse(dateSlot));
+      c.setTime(simpleDateFormat.parse(slot));
       int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
-      List<Schedule> schedules = shop.getSchedules()
-          .stream()
-          .filter(s -> s.getDayOfWeek().equalsIgnoreCase(Day.values()[dayOfWeek - 1].toString()))
-          .collect(Collectors.toList());
+      List<Schedule> schedules =
+          shop.getSchedules().stream()
+              .filter(
+                  s -> s.getDayOfWeek().equalsIgnoreCase(Day.values()[dayOfWeek - 1].toString()))
+              .collect(Collectors.toList());
       String lastBookingSlot = getLastBookingSlot(schedules);
-      timeSlots = getFormattedDate(schedules.get(0).getStartTime(),
-          lastBookingSlot, BarberShopApiConstants.HH_MM, Calendar.MINUTE,
-          applicationProperties.getShopDetails().getEndTime());
+      timeSlots =
+          getFormattedDate(
+              schedules.get(0).getStartTime(),
+              lastBookingSlot,
+              BarberShopApiConstants.HH_MM,
+              Calendar.MINUTE,
+              applicationProperties.getShopDetails().getEndTime());
     } catch (ParseException e) {
-      throw new GenericApiException(BarberShopApiConstants.ERROR_WHILE_PARSING_TIME_SLOTS,
-          HttpStatus.INTERNAL_SERVER_ERROR, ErrorCodes.ERROR_WHILE_PARSING, e);
+      throw new GenericApiException(
+          BarberShopApiConstants.ERROR_WHILE_PARSING_TIME_SLOTS,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          ErrorCodes.ERROR_WHILE_PARSING,
+          e);
     }
     return timeSlots;
   }
@@ -68,7 +74,8 @@ public class BarberShopApiUtil {
     } catch (ParseException e) {
       throw new GenericApiException(
           BarberShopApiConstants.ERROR_WHILE_RETRIEVING_LAST_BOOKING_SLOTS,
-          HttpStatus.BAD_REQUEST, ErrorCodes.ERROR_WHILE_PARSING);
+          HttpStatus.BAD_REQUEST,
+          ErrorCodes.ERROR_WHILE_PARSING);
     }
     calendar.setTime(endDate);
     calendar.add(Calendar.MINUTE, -applicationProperties.getShopDetails().getEndTime());
@@ -79,15 +86,15 @@ public class BarberShopApiUtil {
   /**
    * Gets formatted date.
    *
-   * @param startTime    the start time
-   * @param endTime      the end time
-   * @param format       the format
+   * @param startTime the start time
+   * @param endTime the end time
+   * @param format the format
    * @param calendarType the calendar type
-   * @param slot         the slot
+   * @param slot the slot
    * @return the formatted date
    */
-  public Set<String> getFormattedDate(String startTime, String endTime, String format,
-      int calendarType, int slot) {
+  public Set<String> getFormattedDate(
+      String startTime, String endTime, String format, int calendarType, int slot) {
     SimpleDateFormat sdf = new SimpleDateFormat(format);
     Date startDate = null;
     Date endDate = null;
@@ -95,8 +102,11 @@ public class BarberShopApiUtil {
       startDate = sdf.parse(startTime);
       endDate = sdf.parse(endTime);
     } catch (ParseException e) {
-      throw new GenericApiException(BarberShopApiConstants.ERROR_WHILE_PARSING_START_TIME_END_TIME,
-          HttpStatus.BAD_REQUEST, ErrorCodes.ERROR_WHILE_PARSING, e);
+      throw new GenericApiException(
+          BarberShopApiConstants.ERROR_WHILE_PARSING_START_TIME_END_TIME,
+          HttpStatus.BAD_REQUEST,
+          ErrorCodes.ERROR_WHILE_PARSING,
+          e);
     }
 
     Set<String> range = new LinkedHashSet<>();
@@ -112,5 +122,4 @@ public class BarberShopApiUtil {
     }
     return range;
   }
-
 }

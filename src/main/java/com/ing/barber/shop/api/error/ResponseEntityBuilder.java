@@ -2,9 +2,7 @@ package com.ing.barber.shop.api.error;
 
 import org.springframework.http.ResponseEntity;
 
-/**
- * The type Response entity builder.
- */
+/** The type Response entity builder. */
 public class ResponseEntityBuilder {
 
   /**
@@ -16,5 +14,4 @@ public class ResponseEntityBuilder {
   public static ResponseEntity<Object> build(ApiError apiError) {
     return new ResponseEntity(apiError, apiError.getStatus());
   }
-
 }

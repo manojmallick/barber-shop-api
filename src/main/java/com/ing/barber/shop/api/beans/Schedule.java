@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * The type Schedule.
- */
+/** The type Schedule. */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,10 +16,15 @@ public class Schedule {
 
   @Override
   public String toString() {
-    return "Schedule{" +
-        "dayOfWeek=" + dayOfWeek +
-        ", startTime='" + startTime + '\'' +
-        ", endTime='" + endTime + '\'' +
-        '}';
+    return "Schedule{"
+        + "dayOfWeek="
+        + dayOfWeek
+        + ", startTime='"
+        + startTime
+        + '\''
+        + ", endTime='"
+        + endTime
+        + '\''
+        + '}';
   }
 }

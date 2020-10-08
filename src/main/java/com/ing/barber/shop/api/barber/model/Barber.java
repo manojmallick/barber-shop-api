@@ -13,9 +13,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-/**
- * The type Barber.
- */
+/** The type Barber. */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,9 +25,11 @@ public class Barber {
   @ApiModelProperty(notes = "id is mandatory only while booking for a barber", required = false)
   @ValidBarber
   private String id;
+
   private String name;
   private int experience;
   private String avatar;
+
   @JsonIgnore
   @Field(value = "schedules")
   private List<Schedule> schedules;

@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * The type Services controller.
- */
+/** The type Services controller. */
 @RestController
 @RequestMapping("/v1/services")
 @AllArgsConstructor(onConstructor_ = {@Autowired})
@@ -29,8 +27,7 @@ public class ServicesController {
    * @param httpRequest the http request
    * @return the all services
    */
-  @GetMapping(
-      produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public List<Service> getAllServices(HttpServletRequest httpRequest) {
 
     log.info("Made request to get All Services API. [url={}]", httpRequest.getRequestURI());

@@ -8,14 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * The type Customer.
- */
+/** The type Customer. */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer {
-
 
   @ApiModelProperty(notes = "name is mandatory", required = true)
   @NotEmpty(message = "name can't be empty.")
@@ -27,7 +24,9 @@ public class Customer {
 
   @Email
   @Size(max = 100, message = "Email must be less than 100 characters.")
-  @ApiModelProperty(notes = "Email is mandatory & to be valid and less than 100 characters", required = true)
+  @ApiModelProperty(
+      notes = "Email is mandatory & to be valid and less than 100 characters",
+      required = true)
   private String email;
 
   @NotEmpty(message = "mobile number can't be empty.")

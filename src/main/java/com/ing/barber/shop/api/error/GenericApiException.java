@@ -2,10 +2,7 @@ package com.ing.barber.shop.api.error;
 
 import org.springframework.http.HttpStatus;
 
-
-/**
- * The type Generic api exception.
- */
+/** The type Generic api exception. */
 public class GenericApiException extends RuntimeException {
 
   private static final long serialVersionUID = 1L;
@@ -15,7 +12,7 @@ public class GenericApiException extends RuntimeException {
   /**
    * Instantiates a new Generic api exception.
    *
-   * @param message    the message
+   * @param message the message
    * @param httpStatus the http status
    * @param errorCodes the error codes
    */
@@ -28,13 +25,13 @@ public class GenericApiException extends RuntimeException {
   /**
    * Instantiates a new Generic api exception.
    *
-   * @param message    the message
+   * @param message the message
    * @param httpStatus the http status
    * @param errorCodes the error codes
-   * @param exception  the exception
+   * @param exception the exception
    */
-  public GenericApiException(String message, HttpStatus httpStatus,
-      ErrorCodes errorCodes, Exception exception) {
+  public GenericApiException(
+      String message, HttpStatus httpStatus, ErrorCodes errorCodes, Exception exception) {
 
     super(message, exception);
     this.httpStatus = httpStatus;

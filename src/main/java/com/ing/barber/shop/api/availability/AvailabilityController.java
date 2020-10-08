@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
-/**
- * The type Availability controller.
- */
+/** The type Availability controller. */
 @RestController
 @RequestMapping("/v1/availabilities")
 @Slf4j
@@ -34,20 +31,26 @@ public class AvailabilityController {
    * Gets all availability by date.
    *
    * @param bookingDate the booking date
-   * @param endDate     the end date
-   * @param shopId      the shop id
+   * @param endDate the end date
+   * @param shopId the shop id
    * @param httpRequest the http request
    * @return the all availability by date
    * @throws ParseException the parse exception
    */
   @GetMapping
   public List<Availability> getAllAvailabilityByDate(
-      @Valid @RequestParam() @DateTimeFormat(pattern = "yyyy-MM-dd") @FutureOrPresent final LocalDate bookingDate,
-      @Valid @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") @FutureOrPresent final LocalDate endDate,
-      @RequestParam() @ValidShop final String shopId, HttpServletRequest httpRequest)
+      @Valid @RequestParam() @DateTimeFormat(pattern = "yyyy-MM-dd") @FutureOrPresent
+          final LocalDate bookingDate,
+      @Valid
+          @RequestParam(required = false)
+          @DateTimeFormat(pattern = "yyyy-MM-dd")
+          @FutureOrPresent
+          final LocalDate endDate,
+      @RequestParam() @ValidShop final String shopId,
+      HttpServletRequest httpRequest)
       throws ParseException {
-    log.info("Made request to get All Availability ByDate API. [url={}]",
-        httpRequest.getRequestURI());
+    log.info(
+        "Made request to get All Availability ByDate API. [url={}]", httpRequest.getRequestURI());
     return availabilityService.getAllAvailabilityByDate(bookingDate, endDate, shopId);
   }
 }

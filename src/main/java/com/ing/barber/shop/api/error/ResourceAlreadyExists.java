@@ -1,17 +1,15 @@
 package com.ing.barber.shop.api.error;
 
-/**
- * The type Resource already exists.
- */
+/** The type Resource already exists. */
 public class ResourceAlreadyExists extends RuntimeException {
 
+  private static final long serialVersionUID = 1L;
   private ErrorCodes errorCodes;
-
 
   /**
    * Instantiates a new Resource already exists.
    *
-   * @param message    the message
+   * @param message the message
    * @param errorCodes the error codes
    */
   public ResourceAlreadyExists(String message, ErrorCodes errorCodes) {
@@ -22,9 +20,9 @@ public class ResourceAlreadyExists extends RuntimeException {
   /**
    * Instantiates a new Resource already exists.
    *
-   * @param message    the message
+   * @param message the message
    * @param errorCodes the error codes
-   * @param exception  the exception
+   * @param exception the exception
    */
   public ResourceAlreadyExists(String message, ErrorCodes errorCodes, Exception exception) {
 

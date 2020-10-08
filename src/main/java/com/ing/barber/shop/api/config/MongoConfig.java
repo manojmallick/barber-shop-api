@@ -12,23 +12,21 @@ import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
-/**
- * The type Mongo config.
- */
+/** The type Mongo config. */
 @Configuration
 public class MongoConfig {
 
   /**
    * Mapping mongo converter mapping mongo converter.
    *
-   * @param factory     the factory
-   * @param context     the context
+   * @param factory the factory
+   * @param context the context
    * @param beanFactory the bean factory
    * @return the mapping mongo converter
    */
   @Bean
-  public MappingMongoConverter mappingMongoConverter(MongoDbFactory factory,
-      MongoMappingContext context, BeanFactory beanFactory) {
+  public MappingMongoConverter mappingMongoConverter(
+      MongoDbFactory factory, MongoMappingContext context, BeanFactory beanFactory) {
     DbRefResolver dbRefResolver = new DefaultDbRefResolver(factory);
     MappingMongoConverter mappingConverter = new MappingMongoConverter(dbRefResolver, context);
     try {
@@ -40,4 +38,3 @@ public class MongoConfig {
     return mappingConverter;
   }
 }
- 

@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * The type Availability.
- */
+/** The type Availability. */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

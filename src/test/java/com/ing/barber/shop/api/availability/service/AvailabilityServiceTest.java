@@ -19,9 +19,7 @@ import com.ing.barber.shop.api.shop.repo.ShopRepository;
 import com.ing.barber.shop.api.util.BarberShopApiConstants;
 import com.ing.barber.shop.api.util.BarberShopApiUtil;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,81 +32,54 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/**
- * The type Availability service test.
- */
+/** The type Availability service test. */
 @RunWith(MockitoJUnitRunner.class)
 public class AvailabilityServiceTest {
 
-  /**
-   * The constant BOOKING_DATE.
-   */
   public static final LocalDate BOOKING_DATE = LocalDate.of(2020, 10, 5);
-  /**
-   * The constant SHOP_ID.
-   */
   public static final String SHOP_ID = "1";
-  /**
-   * The Exception rule.
-   */
-  @Rule
-  public ExpectedException exceptionRule = ExpectedException.none();
-  @Mock
-  private AppointmentRepository appointmentRepository;
-  @Mock
-  private BarberRepository barberRepository;
-  @Mock
-  private BarberShopApiUtil barberShopApiUtil;
-  @Mock
-  private ShopRepository shopRepository;
+  /** The Exception rule. */
+  @Rule public ExpectedException exceptionRule = ExpectedException.none();
 
-  @InjectMocks
-  private AvailabilityService availabilityService;
+  @Mock private AppointmentRepository appointmentRepository;
+  @Mock private BarberRepository barberRepository;
+  @Mock private BarberShopApiUtil barberShopApiUtil;
+  @Mock private ShopRepository shopRepository;
 
+  @InjectMocks private AvailabilityService availabilityService;
 
-  /**
-   * Gets all availability by date non existing shop.
-   */
+  /** Gets all availability by date non existing shop. */
   @Test
   public void getAllAvailabilityByDateNonExistingShop() {
-    //mock
-    when(shopRepository.findById(anyString()))
-        .thenReturn(Optional.empty());
-    when(barberRepository.findAll())
-        .thenReturn(new ArrayList<Barber>());
-    when(barberShopApiUtil.getFormattedDate(anyString(), anyString(), any(), anyInt(), anyInt()))
-        .thenReturn(new HashSet<>());
+    // mock
+    when(shopRepository.findById(anyString())).thenReturn(Optional.empty());
 
-    //assert
+    // assert
     exceptionRule.expect(ResourceNotFoundException.class);
     exceptionRule.expectMessage(is(BarberShopApiConstants.SHOP_NOT_FOUND));
-    //method call
+    // method call
     availabilityService.getAllAvailabilityByDate(BOOKING_DATE, BOOKING_DATE, SHOP_ID);
   }
 
-  /**
-   * Gets all availability by date existing shop and same date range.
-   */
+  /** Gets all availability by date existing shop and same date range. */
   @Test
   public void getAllAvailabilityByDateExistingShopAndSameDateRange() {
-    //mock
-    when(shopRepository.findById(anyString()))
-        .thenReturn(Optional.of(getShop()));
-    when(barberRepository.findAll())
-        .thenReturn(Arrays.asList(getBarber(), getBarber()));
+    // mock
+    when(shopRepository.findById(anyString())).thenReturn(Optional.of(getShop()));
+    when(barberRepository.findAll()).thenReturn(Arrays.asList(getBarber(), getBarber()));
 
     when(barberShopApiUtil.getFormattedDate(anyString(), anyString(), any(), anyInt(), anyInt()))
         .thenReturn(getDateSlots());
 
-    when(
-        appointmentRepository.findAllAppointmentByBookingDateAndEndDate(BOOKING_DATE, BOOKING_DATE))
+    when(appointmentRepository.findAllAppointmentByBookingDateAndEndDate(
+            BOOKING_DATE, BOOKING_DATE))
         .thenReturn(getBookedAppointments());
 
     when(barberShopApiUtil.getTimeSlots(any(), any(), any())).thenReturn(getTimeSlots());
 
-    //method call
-    List<Availability> actualDateTimeSlotMap = availabilityService
-        .getAllAvailabilityByDate(BOOKING_DATE, BOOKING_DATE, SHOP_ID);
+    // method call
+    List<Availability> actualDateTimeSlotMap =
+        availabilityService.getAllAvailabilityByDate(BOOKING_DATE, BOOKING_DATE, SHOP_ID);
 
     assertNotNull(actualDateTimeSlotMap);
     for (Availability entry : actualDateTimeSlotMap) {
@@ -117,13 +88,11 @@ public class AvailabilityServiceTest {
     }
   }
 
-
   private Barber getNewBarber(String s) {
     Barber newBarber = new Barber();
     newBarber.setId(s);
     return newBarber;
   }
-
 
   private List<Appointment> getBookedAppointments() {
     Appointment mockAppointment = getAppointment();

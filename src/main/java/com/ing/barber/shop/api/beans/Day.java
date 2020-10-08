@@ -1,8 +1,12 @@
 package com.ing.barber.shop.api.beans;
 
-/**
- * The enum Day.
- */
+/** The enum Day. */
 public enum Day {
-  SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY;
+  SUNDAY,
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THURSDAY,
+  FRIDAY,
+  SATURDAY;
 }

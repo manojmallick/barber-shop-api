@@ -20,11 +20,11 @@ services:
       - MONGO_DB_DATABASE=${DB_DATABASE}
       - LOG_LEVEL=${LOG_LEVEL}
       - APP_PORT=${APP_PORT}
-#    secrets:
-#      - MONGO_DB_USERNAME
-#      - MONGO_DB_PASSWORD
-#    env_file:
-#      - .env
+  #    secrets:
+  #      - MONGO_DB_USERNAME
+  #      - MONGO_DB_PASSWORD
+  #    env_file:
+  #      - .env
   mongodb:
     image: mongo:4.2.5
     ports:

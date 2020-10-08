@@ -12,9 +12,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-/**
- * The type Shop.
- */
+/** The type Shop. */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,24 +24,39 @@ public class Shop {
   @NotEmpty(message = "id can't be empty.")
   @ValidShop
   private String id;
+
   private String name;
   private String address;
   private String avatar;
   private String phone;
   private String email;
+
   @Field(value = "schedules")
   private List<Schedule> schedules;
 
   @Override
   public String toString() {
-    return "Shop{" +
-        "id='" + id + '\'' +
-        ", name='" + name + '\'' +
-        ", address='" + address + '\'' +
-        ", avatar='" + avatar + '\'' +
-        ", phone='" + phone + '\'' +
-        ", email='" + email + '\'' +
-        ", schedules=" + schedules +
-        '}';
+    return "Shop{"
+        + "id='"
+        + id
+        + '\''
+        + ", name='"
+        + name
+        + '\''
+        + ", address='"
+        + address
+        + '\''
+        + ", avatar='"
+        + avatar
+        + '\''
+        + ", phone='"
+        + phone
+        + '\''
+        + ", email='"
+        + email
+        + '\''
+        + ", schedules="
+        + schedules
+        + '}';
   }
 }

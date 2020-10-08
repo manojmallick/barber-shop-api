@@ -16,9 +16,9 @@ services:
       - APP_PORT=8080
       - MONGO_DB_HOST=mongodb
       - LOG_LEVEL=DEBUG
-#    secrets:
-#      - MONGO_DB_USERNAME
-#      - MONGO_DB_PASSWORD
+    #    secrets:
+    #      - MONGO_DB_USERNAME
+    #      - MONGO_DB_PASSWORD
     env_file:
       - .env
   mongodb:

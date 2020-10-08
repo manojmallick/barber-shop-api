@@ -6,17 +6,14 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-/**
- * The type Service.
- */
+/** The type Service. */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(value = "services")
 public class Service {
 
-  @Id
-  private String id;
+  @Id private String id;
   private String name;
   private double amount;
   private ServiceType type;

@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * The type Appointment controller.
- */
+/** The type Appointment controller. */
 @Slf4j
 @RestController
 @Api(value = "Appointment")
@@ -37,12 +35,10 @@ public class AppointmentController {
    * @return the appointment response
    */
   @PostMapping
-  @ApiOperation(value = "save appointment",
-      notes = "Returns the confirmed appointment details")
-  public Appointment saveAppointment(@RequestBody @Valid final Appointment appointment,
-      final HttpServletRequest httpRequest) {
-    log.info("Made request to save Appointment API. [url={}]",
-        httpRequest.getRequestURI());
+  @ApiOperation(value = "save appointment", notes = "Returns the confirmed appointment details")
+  public Appointment saveAppointment(
+      @RequestBody @Valid final Appointment appointment, final HttpServletRequest httpRequest) {
+    log.info("Made request to save Appointment API. [url={}]", httpRequest.getRequestURI());
     return appointmentService.saveAppointment(appointment);
   }
 

@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * The type Shop controller.
- */
+/** The type Shop controller. */
 @Slf4j
 @RestController
 @RequestMapping("/v1/shops")
@@ -29,12 +27,10 @@ public class ShopController {
    * @param httpRequest the http request
    * @return the all shops
    */
-  @GetMapping(
-      produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public List<Shop> getAllShops(HttpServletRequest httpRequest) {
 
     log.info("Made request to get All Shops. [url={}]", httpRequest.getRequestURI());
     return shopService.getAllShops();
   }
-
 }

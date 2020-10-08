@@ -22,22 +22,25 @@ import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-/**
- * The type Appointment used for both request and response of Appointment booking api
- */
+/** The type Appointment used for both request and response of Appointment booking api */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(value = "appointments")
 @ApiModel(description = "Appointment")
 @CompoundIndexes({
-    @CompoundIndex(name = "barber_index", def = "{'startTime' : 1, 'bookingDate': 1,  'barber':1}", unique = true),
-    @CompoundIndex(name = "customer_index", def = "{'startTime' : 1, 'bookingDate': 1, 'customer.email':1}", unique = true)
+  @CompoundIndex(
+      name = "barber_index",
+      def = "{'startTime' : 1, 'bookingDate': 1,  'barber':1}",
+      unique = true),
+  @CompoundIndex(
+      name = "customer_index",
+      def = "{'startTime' : 1, 'bookingDate': 1, 'customer.email':1}",
+      unique = true)
 })
 public class Appointment {
 
-  @Id
-  private String id;
+  @Id private String id;
 
   @NotNull(message = "customer details can't be empty")
   @Valid
@@ -45,12 +48,13 @@ public class Appointment {
   private Customer customer;
 
   @DBRef
-  @ApiModelProperty(notes = "barber details is mandatory only while selecting barber.", required = false)
+  @ApiModelProperty(
+      notes = "barber details is mandatory only while selecting barber.",
+      required = false)
   @Valid
   private Barber barber;
 
-  @DBRef
-  private List<Service> services;
+  @DBRef private List<Service> services;
 
   @DBRef
   @NotNull(message = "shop details can't be empty")
@@ -62,8 +66,7 @@ public class Appointment {
   @ApiModelProperty(notes = "start time is mandatory.", required = true)
   private String startTime;
 
-  @JsonIgnore
-  private String endTime;
+  @JsonIgnore private String endTime;
 
   @NotNull(message = "booking time can't be empty")
   @Valid

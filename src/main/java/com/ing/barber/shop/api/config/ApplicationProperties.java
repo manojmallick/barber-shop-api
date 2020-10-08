@@ -1,12 +1,9 @@
 package com.ing.barber.shop.api.config;
 
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-/**
- * The type Application properties.
- */
+/** The type Application properties. */
 @ConfigurationProperties("app")
 @Component
 public class ApplicationProperties {
@@ -31,9 +28,7 @@ public class ApplicationProperties {
     this.shopDetails = shopDetails;
   }
 
-  /**
-   * The type Shop details.
-   */
+  /** The type Shop details. */
   public static class ShopDetails {
 
     private int endTime;

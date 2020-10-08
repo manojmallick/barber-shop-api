@@ -8,9 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * The type Services service.
- */
+/** The type Services service. */
 @org.springframework.stereotype.Service
 @Slf4j
 @AllArgsConstructor(onConstructor_ = {@Autowired})
@@ -27,5 +25,4 @@ public class ServicesService {
   public List<Service> getAllServices() {
     return servicesRepository.findAll();
   }
-
 }
