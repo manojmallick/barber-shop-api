@@ -13,10 +13,13 @@ import com.ing.barber.shop.api.util.BarberShopApiConstants;
 import com.ing.barber.shop.api.util.BarberShopApiUtil;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,35 +66,64 @@ public class AvailabilityService {
             1);
     List<Appointment> appointments =
         appointmentRepository.findAllAppointmentByBookingDateAndEndDate(bookingDate, endDate);
-    List<Availability> availabilities = new ArrayList<Availability>();
+    List<Availability> availabilities = new LinkedList<>();
+
     dateSlots.stream()
         .forEach(
             dateSlot -> {
-              Set<String> finalTimeslots =
+              Map<String, List<String>> barberTimeSlot = new LinkedHashMap<>();
+              barbers.forEach(
+                  barber -> {
+                    barberTimeSlot.put(barber.getId(), new LinkedList<>());
+                  });
+              final Set<String> finalTimeslots =
                   barberShopApiUtil.getTimeSlots(simpleDateFormat, shop, dateSlot);
-              List<Appointment> currentAppointment =
-                  filterAppointmentsWithDateSlot(appointments, dateSlot);
+              final Set<String> slot = new TreeSet<>();
+              mapBarbersTimeSlot(
+                  barbers, appointments, dateSlot, barberTimeSlot, finalTimeslots, slot);
 
-              removeTimeSlotsIfBooked(barbers, finalTimeslots, currentAppointment);
-              availabilities.add(new Availability(dateSlot, finalTimeslots));
+              availabilities.add(new Availability(dateSlot, slot, barberTimeSlot));
             });
 
     return availabilities;
   }
 
-  private void removeTimeSlotsIfBooked(
-      List<Barber> barbers, Set<String> finalTimeslots, List<Appointment> currentAppointment) {
-    if (currentAppointment.size() == barbers.size()) {
-      finalTimeslots.remove(currentAppointment.get(0).getBookingDate().toString());
-    }
+  private void mapBarbersTimeSlot(
+      List<Barber> barbers,
+      List<Appointment> appointments,
+      String dateSlot,
+      Map<String, List<String>> barberTimeSlot,
+      Set<String> finalTimeslots,
+      Set<String> slot) {
+    finalTimeslots.forEach(
+        time -> {
+          List<Appointment> currentAppointment =
+              filterAppointmentsWithDateSlot(appointments, dateSlot, time);
+          if (currentAppointment.size() != barbers.size()) {
+            slot.add(time);
+          }
+          barbers.forEach(
+              barber -> {
+                if (currentAppointment.stream()
+                        .filter(
+                            appointment ->
+                                appointment.getBarber().getId().equalsIgnoreCase(barber.getId()))
+                        .count()
+                    == 0) {
+                  barberTimeSlot.get(barber.getId()).add(time);
+                }
+              });
+        });
   }
 
   private List<Appointment> filterAppointmentsWithDateSlot(
-      List<Appointment> appointments, String dateSlot) {
+      List<Appointment> appointments, String dateSlot, String timeslot) {
     List<Appointment> currentAppointment =
         appointments.stream()
             .filter(
-                appointment -> dateSlot.equalsIgnoreCase(appointment.getBookingDate().toString()))
+                appointment ->
+                    dateSlot.equalsIgnoreCase(appointment.getBookingDate().toString())
+                        && timeslot.equalsIgnoreCase(appointment.getStartTime()))
             .collect(Collectors.toList());
     return currentAppointment;
   }

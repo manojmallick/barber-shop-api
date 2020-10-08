@@ -6,6 +6,8 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 /** The type Barber service. */
@@ -22,6 +24,6 @@ public class BarberService {
    * @return the all barbers
    */
   public List<Barber> getAllBarbers() {
-    return barberRepository.findAll();
+    return barberRepository.findAll(Sort.by(Direction.DESC, "experience"));
   }
 }

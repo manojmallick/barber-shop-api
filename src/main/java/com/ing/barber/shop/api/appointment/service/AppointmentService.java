@@ -84,46 +84,42 @@ public class AppointmentService {
           ErrorCodes.ERROR_BOOKING_TIME_NOT_AVAILABLE);
     }
 
-    if (appointment.getBarber() != null && !StringUtils.isEmpty(appointment.getBarber().getId())) {
-      throw new GenericApiException(
-          BarberShopApiConstants.BOOKING_BY_BARBER_ID_FEATURE_NOT_AVAILABLE,
-          HttpStatus.BAD_REQUEST,
-          ErrorCodes.ERROR_FEATURE_NOT_AVAILABLE);
-    }
-
     if (isBookingExistWithCustomer(appointment, appointments)) {
       throw new ResourceAlreadyExists(
           BarberShopApiConstants.BOOKING_ALREADY_EXIST_FOR_THE_CUSTOMER,
           ErrorCodes.ERROR_DUPLICATE_BOOKING_CUSTOMER);
     }
 
-    List<Barber> availableBarbers = getAvailableBarbers(appointments, barbers);
+    if (!(appointment.getBarber() != null
+        && !StringUtils.isEmpty(appointment.getBarber().getId())
+        && isBarberAvialable(appointments, appointment.getBarber()))) {
+      List<Barber> availableBarbers = getAvailableBarbers(appointments, barbers);
 
-    String endTime = mapEndTime(appointment);
-
-    if (availableBarbers.size() > 0) {
-      appointment.setBarber(availableBarbers.get(0));
-      appointment.setEndTime(endTime);
-    } else {
-      throw new GenericApiException(
-          BarberShopApiConstants.NO_BARBER_AVAILABLE_FOR_BOOKING,
-          HttpStatus.BAD_REQUEST,
-          ErrorCodes.ERROR_FEATURE_NOT_AVAILABLE);
+      if (availableBarbers.size() > 0) {
+        appointment.setBarber(availableBarbers.get(0));
+      } else {
+        throw new GenericApiException(
+            BarberShopApiConstants.NO_BARBER_AVAILABLE_FOR_BOOKING,
+            HttpStatus.BAD_REQUEST,
+            ErrorCodes.ERROR_FEATURE_NOT_AVAILABLE);
+      }
     }
+    String endTime = mapEndTime(appointment);
+    appointment.setEndTime(endTime);
     return appointmentRepository.save(appointment);
   }
 
   private List<Barber> getAvailableBarbers(List<Appointment> appointments, List<Barber> barbers) {
     return barbers.stream()
-        .filter(
-            barber ->
-                appointments.stream()
-                        .filter(
-                            appointment ->
-                                appointment.getBarber().getId().equalsIgnoreCase(barber.getId()))
-                        .count()
-                    == 0)
+        .filter(barber -> isBarberAvialable(appointments, barber))
         .collect(Collectors.toList());
+  }
+
+  private boolean isBarberAvialable(List<Appointment> appointments, Barber barber) {
+    return appointments.stream()
+            .filter(appointment -> appointment.getBarber().getId().equalsIgnoreCase(barber.getId()))
+            .count()
+        == 0;
   }
 
   private boolean isStartTimeInValid(Appointment appointment, Set<String> slots) {
