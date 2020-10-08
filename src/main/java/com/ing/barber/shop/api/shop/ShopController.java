@@ -12,14 +12,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * The type Shop controller.
+ */
+@Slf4j
 @RestController
 @RequestMapping("/v1/shops")
 @AllArgsConstructor(onConstructor_ = {@Autowired})
-@Slf4j
 public class ShopController {
 
-  private ShopService shopService;
+  private final ShopService shopService;
 
+  /**
+   * Gets all shops.
+   *
+   * @param httpRequest the http request
+   * @return the all shops
+   */
   @GetMapping(
       produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public List<Shop> getAllShops(HttpServletRequest httpRequest) {

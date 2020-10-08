@@ -22,6 +22,9 @@ import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * The type Appointment used for both request and response of Appointment booking api
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

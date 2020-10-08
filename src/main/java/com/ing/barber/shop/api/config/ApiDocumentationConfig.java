@@ -6,6 +6,9 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.License;
 import io.swagger.annotations.SwaggerDefinition;
 
+/**
+ * The interface Api documentation config.
+ */
 @SwaggerDefinition(
     info = @Info(
         description = "Edwin's Barber Shop",

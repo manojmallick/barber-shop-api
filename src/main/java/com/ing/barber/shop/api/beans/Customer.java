@@ -8,10 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * The type Customer.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@ApiModel(description="Customer")
 public class Customer {
 
 

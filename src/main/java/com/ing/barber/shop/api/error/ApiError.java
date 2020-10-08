@@ -9,6 +9,9 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 
+/**
+ * The type Api error.
+ */
 @Setter
 @AllArgsConstructor
 @Getter

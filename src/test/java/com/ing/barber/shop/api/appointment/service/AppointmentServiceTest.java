@@ -7,9 +7,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
 
+import com.ing.barber.shop.api.appointment.json.AppointmentResponse;
 import com.ing.barber.shop.api.appointment.model.Appointment;
 import com.ing.barber.shop.api.appointment.repo.AppointmentRepository;
 import com.ing.barber.shop.api.barber.model.Barber;
@@ -39,10 +38,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+/**
+ * The type Appointment service test.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class AppointmentServiceTest {
 
+  /**
+   * The constant BOOKING_DATE.
+   */
   public static final LocalDate BOOKING_DATE = LocalDate.of(2020, 10, 5);
+  /**
+   * The Exception rule.
+   */
   @Rule
   public ExpectedException exceptionRule = ExpectedException.none();
   @Mock
@@ -60,6 +68,9 @@ public class AppointmentServiceTest {
   private AppointmentService appointmentService;
 
 
+  /**
+   * Save appointment with invalid start time.
+   */
   @Test
   public void saveAppointmentWithInvalidStartTime() {
     //input
@@ -86,6 +97,9 @@ public class AppointmentServiceTest {
   }
 
 
+  /**
+   * Save appointment with fully booked time slot.
+   */
   @Test
   public void saveAppointmentWithFullyBookedTimeSlot() {
     //input
@@ -118,6 +132,9 @@ public class AppointmentServiceTest {
     appointmentService.saveAppointment(appointmentRequest);
   }
 
+  /**
+   * Save appointment with barber id.
+   */
   @Test
   public void saveAppointmentWithBarberId() {
     //input
@@ -153,6 +170,9 @@ public class AppointmentServiceTest {
     appointmentService.saveAppointment(appointmentRequest);
   }
 
+  /**
+   * Save appointment with same customer.
+   */
   @Test
   public void saveAppointmentWithSameCustomer() {
     //input
@@ -183,7 +203,10 @@ public class AppointmentServiceTest {
     appointmentService.saveAppointment(appointmentRequest);
   }
 
-  //real scenario it would not be happening
+  /**
+   * Save appointment with invalid start time format.
+   */
+//real scenario it would not be happening
   @Test
   public void saveAppointmentWithInvalidStartTimeFormat() {
     //input
@@ -216,6 +239,9 @@ public class AppointmentServiceTest {
     appointmentService.saveAppointment(appointmentRequest);
   }
 
+  /**
+   * Save appointment with no available barbers.
+   */
   @Test
   public void saveAppointmentWithNoAvailableBarbers() {
     //input
@@ -249,6 +275,9 @@ public class AppointmentServiceTest {
 
   }
 
+  /**
+   * Save appointment with available barbers.
+   */
   @Test
   public void saveAppointmentWithAvailableBarbers() {
     //input
@@ -277,11 +306,10 @@ public class AppointmentServiceTest {
     when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
 
     //method call
-     appointmentService.saveAppointment(appointmentRequest);
-
-    //verify
-    verify(appointmentRepository,times(1)).save(appointmentRequest);
-
+    Appointment appointmentResponse = appointmentService
+        .saveAppointment(appointmentRequest);
+    assertNotNull(appointmentResponse);
+    assertThat(appointmentResponse.getId(), is(appointment.getId()));
   }
 
   private Barber getNewBarber(String s) {

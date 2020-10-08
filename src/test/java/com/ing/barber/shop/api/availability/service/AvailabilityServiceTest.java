@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.ing.barber.shop.api.appointment.model.Appointment;
 import com.ing.barber.shop.api.appointment.repo.AppointmentRepository;
+import com.ing.barber.shop.api.availability.json.Availability;
 import com.ing.barber.shop.api.barber.model.Barber;
 import com.ing.barber.shop.api.barber.repo.BarberRepository;
 import com.ing.barber.shop.api.error.ResourceNotFoundException;
@@ -22,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,11 +34,23 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+/**
+ * The type Availability service test.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class AvailabilityServiceTest {
 
+  /**
+   * The constant BOOKING_DATE.
+   */
   public static final LocalDate BOOKING_DATE = LocalDate.of(2020, 10, 5);
+  /**
+   * The constant SHOP_ID.
+   */
   public static final String SHOP_ID = "1";
+  /**
+   * The Exception rule.
+   */
   @Rule
   public ExpectedException exceptionRule = ExpectedException.none();
   @Mock
@@ -55,6 +66,9 @@ public class AvailabilityServiceTest {
   private AvailabilityService availabilityService;
 
 
+  /**
+   * Gets all availability by date non existing shop.
+   */
   @Test
   public void getAllAvailabilityByDateNonExistingShop() {
     //mock
@@ -72,6 +86,9 @@ public class AvailabilityServiceTest {
     availabilityService.getAllAvailabilityByDate(BOOKING_DATE, BOOKING_DATE, SHOP_ID);
   }
 
+  /**
+   * Gets all availability by date existing shop and same date range.
+   */
   @Test
   public void getAllAvailabilityByDateExistingShopAndSameDateRange() {
     //mock
@@ -90,14 +107,13 @@ public class AvailabilityServiceTest {
     when(barberShopApiUtil.getTimeSlots(any(), any(), any())).thenReturn(getTimeSlots());
 
     //method call
-    Map<String, Set<String>> actualDateTimeSlotMap = availabilityService
+    List<Availability> actualDateTimeSlotMap = availabilityService
         .getAllAvailabilityByDate(BOOKING_DATE, BOOKING_DATE, SHOP_ID);
-    System.out.println(actualDateTimeSlotMap);
 
-    assertNotNull(actualDateTimeSlotMap.entrySet());
-    for (Entry<String, Set<String>> entry : actualDateTimeSlotMap.entrySet()) {
-      assertThat(entry.getKey(), is(BOOKING_DATE.toString()));
-      assertThat(entry.getValue(), is(getTimeSlots()));
+    assertNotNull(actualDateTimeSlotMap);
+    for (Availability entry : actualDateTimeSlotMap) {
+      assertThat(entry.getId(), is(BOOKING_DATE.toString()));
+      assertThat(entry.getTimeSlot(), is(getTimeSlots()));
     }
   }
 

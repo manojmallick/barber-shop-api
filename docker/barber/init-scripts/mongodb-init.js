@@ -204,7 +204,7 @@ var shops = [
                   "_id":ObjectId(),
                   "name":"Edwin's Barber Shop",
                   "address":"Hamontstraat 223,Amsterdam, North Holland",
-                  "avatar":"https://data.pixiz.com/output/user/frame/preview/400x400/2/2/5/8/3058522_ecf92.jpg",
+                  "avatar":"https://i.pinimg.com/originals/96/2d/9a/962d9ab708a5f2998ae6538810d34b84.jpg",
                   "phone":"0790340932",
                   "email":"edwin.amsterdam@gmail.com",
                   "schedules":[

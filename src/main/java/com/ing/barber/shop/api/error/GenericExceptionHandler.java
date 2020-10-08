@@ -22,6 +22,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+/**
+ * The type Generic exception handler.
+ */
 @ControllerAdvice
 @Slf4j
 public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
@@ -29,28 +32,30 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
-      final HttpMediaTypeNotSupportedException ex,
+      final HttpMediaTypeNotSupportedException typeNotSupportedException,
       HttpHeaders headers,
       HttpStatus status,
       WebRequest request) {
 
-    List<String> details = buildUnKnownMediaMessage(ex);
+    List<String> details = buildUnKnownMediaMessage(typeNotSupportedException);
     ApiError err = new ApiError(LocalDateTime.now(), ErrorCodes.ERROR_UNKNOWN_MEDIA_TYPE.getCode(),
-        ex.getClass().getSimpleName(),
+        typeNotSupportedException.getClass().getSimpleName(),
         HttpStatus.BAD_REQUEST, "Invalid Media Type", details);
     return ResponseEntityBuilder.build(err);
 
   }
 
   @Override
-  protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+  protected ResponseEntity<Object> handleHttpMessageNotReadable(
+      HttpMessageNotReadableException httpMessageNotReadableException,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
 
     List<String> details = new ArrayList<>();
-    details.add(ex.getMessage());
+    details.add(httpMessageNotReadableException.getMessage());
 
     ApiError err = new ApiError(LocalDateTime.now(),
-        ErrorCodes.ERROR_NOT_READABLE_REQUEST.getCode(), ex.getClass().getSimpleName(),
+        ErrorCodes.ERROR_NOT_READABLE_REQUEST.getCode(),
+        httpMessageNotReadableException.getClass().getSimpleName(),
         HttpStatus.BAD_REQUEST,
         "Malformed request", details);
 
@@ -58,13 +63,15 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @Override
-  protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+  protected ResponseEntity<Object> handleMethodArgumentNotValid(
+      MethodArgumentNotValidException methodArgumentNotValidException,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-    List<String> details = buildValidationErrors(ex);
+    List<String> details = buildValidationErrors(methodArgumentNotValidException);
 
     ApiError err = new ApiError(LocalDateTime.now(),
-        ErrorCodes.ERROR_INVALID_METHOD_ARGUMENT.getCode(), ex.getClass().getSimpleName(),
+        ErrorCodes.ERROR_INVALID_METHOD_ARGUMENT.getCode(),
+        methodArgumentNotValidException.getClass().getSimpleName(),
         HttpStatus.BAD_REQUEST,
         "Validation Errors",
         details);
@@ -74,83 +81,123 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleMissingServletRequestParameter(
-      MissingServletRequestParameterException ex, HttpHeaders headers,
+      MissingServletRequestParameterException missingServletRequestParameterException,
+      HttpHeaders headers,
       HttpStatus status, WebRequest request) {
 
     List<String> details = new ArrayList<String>();
-    details.add(ex.getParameterName() + " parameter is missing");
+    details
+        .add(missingServletRequestParameterException.getParameterName() + " parameter is missing");
 
     ApiError err = new ApiError(LocalDateTime.now(),
-        ErrorCodes.ERROR_MISSING_PARAMETERS.getCode(), ex.getClass().getSimpleName(),
+        ErrorCodes.ERROR_MISSING_PARAMETERS.getCode(),
+        missingServletRequestParameterException.getClass().getSimpleName(),
         HttpStatus.BAD_REQUEST, "Missing Parameters", details);
 
     return ResponseEntityBuilder.build(err);
   }
 
+  /**
+   * Handle method argument type mismatch response entity.
+   *
+   * @param typeMismatchException the typeMismatchException
+   * @param request               the request
+   * @return the response entity
+   */
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(
-      MethodArgumentTypeMismatchException ex,
+      MethodArgumentTypeMismatchException typeMismatchException,
       WebRequest request) {
     List<String> details = new ArrayList<String>();
-    details.add(ex.getMessage());
+    details.add(typeMismatchException.getMessage());
 
     ApiError err = new ApiError(LocalDateTime.now(), ErrorCodes.ERROR_TYPE_MISMATCH.getCode(),
-        ex.getClass().getSimpleName(), HttpStatus.BAD_REQUEST, "Mismatch Type", details);
+        typeMismatchException.getClass().getSimpleName(), HttpStatus.BAD_REQUEST, "Mismatch Type",
+        details);
 
     return ResponseEntityBuilder.build(err);
   }
 
 
+  /**
+   * Handle resource not found exception response entity.
+   *
+   * @param resourceNotFoundException the resourceNotFoundException
+   * @return the response entity
+   */
   @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
+  public ResponseEntity<Object> handleResourceNotFoundException(
+      ResourceNotFoundException resourceNotFoundException) {
 
     List<String> details = new ArrayList<String>();
-    details.add(ex.getMessage());
+    details.add(resourceNotFoundException.getMessage());
 
     ApiError err = new ApiError(LocalDateTime.now(), ErrorCodes.ERROR_NOT_FOUND.getCode(),
-        ex.getClass().getSimpleName(), HttpStatus.NOT_FOUND, "Resource Not Found",
+        resourceNotFoundException.getClass().getSimpleName(), HttpStatus.NOT_FOUND,
+        "Resource Not Found",
         details);
 
     return ResponseEntityBuilder.build(err);
   }
 
-  //TODO: to be added GenericApiException
 
+  /**
+   * Handle resource already exists response entity.
+   *
+   * @param resourceAlreadyExists the resourceAlreadyExists
+   * @return the response entity
+   */
   @ExceptionHandler({ResourceAlreadyExists.class})
-  public ResponseEntity<Object> handleResourceAlreadyExists(ResourceAlreadyExists ex) {
+  public ResponseEntity<Object> handleResourceAlreadyExists(
+      ResourceAlreadyExists resourceAlreadyExists) {
 
     List<String> details = new ArrayList<String>();
-    details.add(ex.getMessage());
+    details.add(resourceAlreadyExists.getMessage());
 
-    ApiError err = new ApiError(LocalDateTime.now(), ErrorCodes.ERROR_RESOURCE_EXIST.getCode(),
-        ex.getClass().getSimpleName(), HttpStatus.CONFLICT, "Resource exists",
+    ApiError err = new ApiError(LocalDateTime.now(),
+        resourceAlreadyExists.getErrorCodes().getCode(),
+        resourceAlreadyExists.getClass().getSimpleName(), HttpStatus.CONFLICT, "Resource exists",
         details);
 
     return ResponseEntityBuilder.build(err);
   }
 
 
+  /**
+   * Handle illegal argument exception response entity.
+   *
+   * @param illegalArgumentException the illegalArgumentException
+   * @return the response entity
+   */
   @ExceptionHandler({IllegalArgumentException.class})
-  public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+  public ResponseEntity<Object> handleIllegalArgumentException(
+      IllegalArgumentException illegalArgumentException) {
 
     List<String> details = new ArrayList<String>();
-    details.add(ex.getMessage());
+    details.add(illegalArgumentException.getMessage());
 
     ApiError err = new ApiError(LocalDateTime.now(), ErrorCodes.ERROR_RESOURCE_EXIST.getCode(),
-        ex.getClass().getSimpleName(), HttpStatus.BAD_REQUEST, "Resource exists",
+        illegalArgumentException.getClass().getSimpleName(), HttpStatus.BAD_REQUEST,
+        "Resource exists",
         details);
 
     return ResponseEntityBuilder.build(err);
   }
 
+  /**
+   * Handle mapping exception response entity.
+   *
+   * @param mappingException the mappingException
+   * @return the response entity
+   */
   @ExceptionHandler({MappingException.class})
-  public ResponseEntity<Object> handleMappingException(MappingException ex) {
+  public ResponseEntity<Object> handleMappingException(MappingException mappingException) {
 
     List<String> details = new ArrayList<String>();
-    details.add(ex.getMessage());
+    details.add(mappingException.getMessage());
 
     ApiError err = new ApiError(LocalDateTime.now(), ErrorCodes.ERROR_RESOURCE_EXIST.getCode(),
-        ex.getClass().getSimpleName(), HttpStatus.BAD_REQUEST, "mapping exception",
+        mappingException.getClass().getSimpleName(), HttpStatus.BAD_REQUEST, "mapping exception",
         details);
 
     return ResponseEntityBuilder.build(err);
@@ -159,55 +206,75 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleNoHandlerFoundException(
-      NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+      NoHandlerFoundException noHandlerFoundException, HttpHeaders headers, HttpStatus status,
+      WebRequest request) {
 
     log.debug("No Handler Found Exception. [url={}, exception={}]",
-        ((ServletWebRequest) request).getRequest().getRequestURI().toString(), ex);
+        ((ServletWebRequest) request).getRequest().getRequestURI(),
+        noHandlerFoundException);
     List<String> details = new ArrayList<String>();
     details.add(String
-        .format("Could not find the %s method for URL %s", ex.getHttpMethod(), ex.getRequestURL()));
+        .format("Could not find the %s method for URL %s", noHandlerFoundException.getHttpMethod(),
+            noHandlerFoundException.getRequestURL()));
 
     ApiError err = new ApiError(LocalDateTime.now(), ErrorCodes.ERROR_NO_HANDLER.getCode(),
-        ex.getClass().getSimpleName(), HttpStatus.BAD_REQUEST, "Method Not Found",
+        noHandlerFoundException.getClass().getSimpleName(), HttpStatus.BAD_REQUEST,
+        "Method Not Found",
         details);
 
     return ResponseEntityBuilder.build(err);
 
   }
 
+  /**
+   * Handle generic api exception response entity.
+   *
+   * @param genericApiException the genericApiException
+   * @param request             the request
+   * @return the response entity
+   */
   @ExceptionHandler({GenericApiException.class})
-  public ResponseEntity<Object> handleGenericApiException(GenericApiException ex,
+  public ResponseEntity<Object> handleGenericApiException(GenericApiException genericApiException,
       WebRequest request) {
 
     List<String> details = new ArrayList<String>();
-    details.add(ex.getMessage());
+    details.add(genericApiException.getMessage());
 
-    ApiError err = new ApiError(LocalDateTime.now(), ErrorCodes.ERROR_RESOURCE_EXIST.getCode(),
-        ex.getClass().getSimpleName(), ex.getHttpStatus(), ex.getMessage(),
+    ApiError err = new ApiError(LocalDateTime.now(), genericApiException.getErrorCodes().getCode(),
+        genericApiException.getClass().getSimpleName(), genericApiException.getHttpStatus(),
+        genericApiException.getMessage(),
         details);
 
     return ResponseEntityBuilder.build(err);
   }
 
+  /**
+   * Handle all response entity.
+   *
+   * @param exception the exception
+   * @param request   the request
+   * @return the response entity
+   */
   @ExceptionHandler({Exception.class})
-  public ResponseEntity<Object> handleAll(Exception ex, WebRequest request) {
+  public ResponseEntity<Object> handleAll(Exception exception, WebRequest request) {
 
     log.error("Request to REST API failed. [url={}, exception={}]",
-        ((ServletWebRequest) request).getRequest().getRequestURI().toString(), ex);
+        ((ServletWebRequest) request).getRequest().getRequestURI(), exception);
     List<String> details = new ArrayList<String>();
 
     ApiError err = new ApiError(LocalDateTime.now(),
         ErrorCodes.ERROR_INTERNAL_SERVER_ERROR.getCode(),
-        ex.getClass().getSimpleName(), HttpStatus.INTERNAL_SERVER_ERROR, "Error occurred",
+        exception.getClass().getSimpleName(), HttpStatus.INTERNAL_SERVER_ERROR, "Error occurred",
         details);
 
     return ResponseEntityBuilder.build(err);
 
   }
 
-  private List<String> buildValidationErrors(MethodArgumentNotValidException ex) {
+  private List<String> buildValidationErrors(
+      MethodArgumentNotValidException methodArgumentNotValidException) {
     List<String> details = new ArrayList<String>();
-    details = ex.getBindingResult()
+    details = methodArgumentNotValidException.getBindingResult()
         .getFieldErrors()
         .stream()
         .map(error -> error.getDefaultMessage())
@@ -215,12 +282,14 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
     return details;
   }
 
-  private List<String> buildUnKnownMediaMessage(HttpMediaTypeNotSupportedException ex) {
+  private List<String> buildUnKnownMediaMessage(
+      HttpMediaTypeNotSupportedException httpMediaTypeNotSupportedException) {
     List<String> details = new ArrayList<>();
     StringBuilder builder = new StringBuilder();
-    builder.append(ex.getContentType());
+    builder.append(httpMediaTypeNotSupportedException.getContentType());
     builder.append(" media type is not supported. Supported media types are ");
-    ex.getSupportedMediaTypes().forEach(t -> builder.append(t).append(", "));
+    httpMediaTypeNotSupportedException.getSupportedMediaTypes()
+        .forEach(t -> builder.append(t).append(", "));
     details.add(builder.toString());
     return details;
   }

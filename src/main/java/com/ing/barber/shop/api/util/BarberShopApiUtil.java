@@ -20,12 +20,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+/**
+ * The type Barber shop api util.
+ */
 @Component
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class BarberShopApiUtil {
 
-  private ApplicationProperties applicationProperties;
+  private final ApplicationProperties applicationProperties;
 
+  /**
+   * Gets time slots.
+   *
+   * @param simpleDateFormat the simple date format
+   * @param shop             the shop
+   * @param dateSlot         the date slot
+   * @return the time slots
+   */
   public Set<String> getTimeSlots(SimpleDateFormat simpleDateFormat, Shop shop, String dateSlot) {
     Set<String> timeSlots = null;
     try {
@@ -43,7 +54,7 @@ public class BarberShopApiUtil {
           applicationProperties.getShopDetails().getEndTime());
     } catch (ParseException e) {
       throw new GenericApiException(BarberShopApiConstants.ERROR_WHILE_PARSING_TIME_SLOTS,
-          HttpStatus.INTERNAL_SERVER_ERROR, ErrorCodes.ERROR_WHILE_PARSING);
+          HttpStatus.INTERNAL_SERVER_ERROR, ErrorCodes.ERROR_WHILE_PARSING, e);
     }
     return timeSlots;
   }
@@ -65,6 +76,16 @@ public class BarberShopApiUtil {
     return lastBookingSlot;
   }
 
+  /**
+   * Gets formatted date.
+   *
+   * @param startTime    the start time
+   * @param endTime      the end time
+   * @param format       the format
+   * @param calendarType the calendar type
+   * @param slot         the slot
+   * @return the formatted date
+   */
   public Set<String> getFormattedDate(String startTime, String endTime, String format,
       int calendarType, int slot) {
     SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -75,7 +96,7 @@ public class BarberShopApiUtil {
       endDate = sdf.parse(endTime);
     } catch (ParseException e) {
       throw new GenericApiException(BarberShopApiConstants.ERROR_WHILE_PARSING_START_TIME_END_TIME,
-          HttpStatus.INTERNAL_SERVER_ERROR, ErrorCodes.ERROR_WHILE_PARSING);
+          HttpStatus.BAD_REQUEST, ErrorCodes.ERROR_WHILE_PARSING, e);
     }
 
     Set<String> range = new LinkedHashSet<>();

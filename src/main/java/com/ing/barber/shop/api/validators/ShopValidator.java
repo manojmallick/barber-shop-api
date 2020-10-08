@@ -9,12 +9,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * The type Shop validator.
+ */
 @Slf4j
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class ShopValidator implements ConstraintValidator<ValidShop, String> {
 
   @Autowired
-  private ShopRepository shopRepository;
+  private final ShopRepository shopRepository;
 
   @Override
   public boolean isValid(final String shopId, final ConstraintValidatorContext context) {
