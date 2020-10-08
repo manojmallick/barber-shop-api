@@ -116,6 +116,7 @@ public class AppointmentServiceTest {
     Appointment appointmentRequest = getAppointment();
     appointmentRequest.setStartTime("10:30");
     appointmentRequest.setBarber(getBarber());
+    appointmentRequest.setCustomer( getCustomer() );
     Set<String> timeSlots = getTimeSlots();
 
     // mock
@@ -124,6 +125,7 @@ public class AppointmentServiceTest {
     when(barberShopApiUtil.getTimeSlots(any(SimpleDateFormat.class), any(Shop.class), anyString()))
         .thenReturn(timeSlots);
     List<Appointment> appointments = getBookedAppointments();
+    appointments.get(0).setCustomer(getCustomer());
 
     when(appointmentRepository.findAllAppointmentByBookingDateAndStartTime(
             any(LocalDate.class), anyString()))
@@ -133,11 +135,11 @@ public class AppointmentServiceTest {
     when(barberRepository.findAll()).thenReturn(Arrays.asList(getBarber(), getBarber()));
 
     // assert
-    exceptionRule.expect(GenericApiException.class);
+    exceptionRule.expect(ResourceAlreadyExists.class);
     exceptionRule.expectMessage(
-        is(BarberShopApiConstants.BOOKING_BY_BARBER_ID_FEATURE_NOT_AVAILABLE));
+        is(BarberShopApiConstants.BOOKING_ALREADY_EXIST_FOR_THE_CUSTOMER));
     exceptionRule.expect(hasProperty("errorCodes"));
-    exceptionRule.expect(hasProperty("errorCodes", is(ErrorCodes.ERROR_FEATURE_NOT_AVAILABLE)));
+    exceptionRule.expect(hasProperty("errorCodes", is(ErrorCodes.ERROR_DUPLICATE_BOOKING_CUSTOMER)));
 
     // method call
     appointmentService.saveAppointment(appointmentRequest);
@@ -201,7 +203,7 @@ public class AppointmentServiceTest {
 
     // assert
     exceptionRule.expect(GenericApiException.class);
-    exceptionRule.expectMessage(is(BarberShopApiConstants.ERROR_WHILE_RETRIEVING_END_TIME));
+    exceptionRule.expectMessage(is(BarberShopApiConstants.NO_BARBER_AVAILABLE_FOR_BOOKING));
     // method call
     appointmentService.saveAppointment(appointmentRequest);
   }

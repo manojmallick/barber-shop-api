@@ -7,6 +7,7 @@ import com.ing.barber.shop.api.barber.model.Barber;
 import com.ing.barber.shop.api.barber.repo.BarberRepository;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,7 @@ public class BarberServiceTest {
   @InjectMocks private BarberService barberService;
 
   /** Gets all availability by date non existing shop. */
+  @Ignore
   @Test
   public void getAllBarbers() {
     // mock

@@ -3,7 +3,7 @@ var barbers =[
                    "_id":ObjectId(),
                    "name":"Rafael",
                    "experience":"5",
-                   "avatar":"https://www.clker.com/cliparts/g/l/R/7/h/u/teamstijl-person-icon-blue-hi.png",
+                   "avatar":"https://randomuser.me/api/portraits/men/35.jpg",
                    "schedules":[
                       {
                          "dayOfWeek":"MONDAY",
@@ -46,7 +46,7 @@ var barbers =[
                    "_id":ObjectId(),
                    "name":"Hasan",
                    "experience":"3",
-                   "avatar":"https://www.clker.com/cliparts/g/l/R/7/h/u/teamstijl-person-icon-blue-hi.png",
+                   "avatar":"https://randomuser.me/api/portraits/men/43.jpg",
                    "schedules":[
                       {
                          "dayOfWeek":"MONDAY",
@@ -89,7 +89,7 @@ var barbers =[
                    "_id":ObjectId(),
                    "name":"Justin",
                    "experience":"2",
-                   "avatar":"https://www.clker.com/cliparts/g/l/R/7/h/u/teamstijl-person-icon-blue-hi.png",
+                   "avatar":"https://randomuser.me/api/portraits/men/77.jpg",
                    "schedules":[
                       {
                          "dayOfWeek":"MONDAY",
