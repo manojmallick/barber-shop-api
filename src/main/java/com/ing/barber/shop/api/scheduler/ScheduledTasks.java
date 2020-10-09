@@ -21,10 +21,9 @@ public class ScheduledTasks {
 
   public static final int HOUR = 1 * 60 * 60 * 1000;
   public static final int MINUTES = 60 * 1000;
+  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
   private final AppointmentRepository appointmentRepository;
   private final EmailService emailService;
-
-  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
   @Scheduled(cron = "0 0/30 8-17 * * MON-FRI") // every 30 minutes 9am - 5pm weekdays
   @Scheduled(cron = "0 0/30 11-16 * * SUN-SAT") // every 30 minutes 12pm - 4pm weekend
@@ -47,7 +46,7 @@ public class ScheduledTasks {
               emailService.sendReminderEmail(appointment, difference / MINUTES);
             }
           } catch (ParseException e) {
-            e.printStackTrace();
+            log.error("failure while sending reminder "+e.getMessage());
           }
         });
   }

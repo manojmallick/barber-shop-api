@@ -4,4 +4,3 @@ public enum EmailTemplate {
   CONFIRMATION_EMAIL,
   REMINDER_EMAIL
 }
-

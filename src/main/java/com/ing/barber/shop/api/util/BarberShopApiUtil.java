@@ -32,7 +32,7 @@ public class BarberShopApiUtil {
    *
    * @param simpleDateFormat the simple date format
    * @param shop the shop
-   * @param slot the  slot(can be time or date)
+   * @param slot the slot(can be time or date)
    * @return the time slots
    */
   public Set<String> getTimeSlots(SimpleDateFormat simpleDateFormat, Shop shop, String slot) {
@@ -121,5 +121,34 @@ public class BarberShopApiUtil {
       }
     }
     return range;
+  }
+
+  /**
+   * This will check if time slot is as already passed or not (to be called only for current date)
+   *
+   * @param CurrentTime the current time
+   * @param availableTimeSlot the available time slot
+   * @return the boolean
+   */
+  public boolean isValidTimeSlot(String CurrentTime, String availableTimeSlot) {
+    SimpleDateFormat sdf = new SimpleDateFormat(BarberShopApiConstants.HH_MM);
+    Date currentDate = null;
+    Date availableDate = null;
+    try {
+      currentDate = sdf.parse(CurrentTime);
+      availableDate = sdf.parse(availableTimeSlot);
+    } catch (ParseException e) {
+      throw new GenericApiException(
+          BarberShopApiConstants.ERROR_WHILE_PARSING_START_TIME_END_TIME,
+          HttpStatus.BAD_REQUEST,
+          ErrorCodes.ERROR_WHILE_PARSING,
+          e);
+    }
+    Calendar calendar = GregorianCalendar.getInstance();
+    calendar.setTime(currentDate);
+
+    return calendar.getTime().before(availableDate);
+
+
   }
 }

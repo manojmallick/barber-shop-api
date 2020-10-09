@@ -39,8 +39,6 @@ public class BarberServiceTest {
     return newBarber;
   }
 
-
-
   private Barber getBarber() {
     Barber mockBarber = getNewBarber("1");
     return mockBarber;

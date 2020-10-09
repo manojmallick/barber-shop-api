@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /** The type Barber validator. */
 @Slf4j
-
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class BarberValidator implements ConstraintValidator<ValidBarber, String> {
 

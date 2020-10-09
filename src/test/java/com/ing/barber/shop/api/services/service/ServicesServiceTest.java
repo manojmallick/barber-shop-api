@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-
 @RunWith(MockitoJUnitRunner.class)
 public class ServicesServiceTest {
 
@@ -29,7 +28,6 @@ public class ServicesServiceTest {
     List<Service> services = servicesService.getAllServices();
     assertNotNull(services);
   }
-
 
   private Service getService() {
     Service service = new Service();
