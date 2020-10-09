@@ -5,6 +5,7 @@ import com.ing.barber.shop.api.appointment.repo.AppointmentRepository;
 import com.ing.barber.shop.api.barber.model.Barber;
 import com.ing.barber.shop.api.barber.repo.BarberRepository;
 import com.ing.barber.shop.api.config.ApplicationProperties;
+import com.ing.barber.shop.api.email.EmailService;
 import com.ing.barber.shop.api.error.ErrorCodes;
 import com.ing.barber.shop.api.error.GenericApiException;
 import com.ing.barber.shop.api.error.ResourceAlreadyExists;
@@ -40,6 +41,7 @@ public class AppointmentService {
   private final ApplicationProperties applicationProperties;
   private final BarberShopApiUtil barberShopApiUtil;
   private final ShopRepository shopRepository;
+  private final EmailService emailService;
 
   /**
    * Save appointment appointment response.
@@ -106,6 +108,7 @@ public class AppointmentService {
     }
     String endTime = mapEndTime(appointment);
     appointment.setEndTime(endTime);
+    emailService.sendConfirmationEmail(appointment);
     return appointmentRepository.save(appointment);
   }
 

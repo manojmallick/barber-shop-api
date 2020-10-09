@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:remove="all">Booking confirmed</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<p th:text="#{greeting(${name})}">
+  Hello, ${name}
+</p>
+<p>
+  Wow! Thanks for booking with us :)
+</p>
+<p>Your booking details are:</p>
+<p class="title">appointment details</p>
+<div>
+  <div>
+    <div>
+      <p>Booking Reference number: ${id}</p>
+      <p>Name: ${name}</p>
+      <p>Email id: ${email}</p>
+      <p>Phone Number: ${mobile}</p>
+      <p>Gender: ${gender}</p>
+      <p>Your Stylish:${ barberName }</p>
+      <p>Date and Time: ${bookingDate} at ${bookingTime}</p>
+    </div>
+  </div>
+  <p>
+    Regards, <br/>
+    <em>Edwin's Team</em>
+  </p>
+</body>
+</html>
