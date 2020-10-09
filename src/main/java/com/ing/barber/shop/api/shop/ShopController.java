@@ -27,7 +27,7 @@ public class ShopController {
    * @param httpRequest the http request
    * @return the all shops
    */
-  @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  @GetMapping
   public List<Shop> getAllShops(HttpServletRequest httpRequest) {
 
     log.info("Made request to get All Shops. [url={}]", httpRequest.getRequestURI());

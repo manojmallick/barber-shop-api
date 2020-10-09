@@ -7,9 +7,9 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /** The type Barber shop api application. (application starting point) */
+@EnableScheduling
 @SpringBootApplication
 @EnableMongoRepositories
-@EnableScheduling
 public class BarberShopApiApplication {
 
   /**

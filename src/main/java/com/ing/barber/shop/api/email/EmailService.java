@@ -40,8 +40,16 @@ public class EmailService {
     sendEmail(new String[]{customerEmail},EmailTemplate.CONFIRMATION_EMAIL,mapAppointmnetObject(appointment),"Conformation email");
   }
 
+  public void sendReminderEmail(Appointment appointment,long minutes){
+    String customerEmail=appointment.getCustomer().getEmail();
+    Map<String,Object> model=mapAppointmnetObject(appointment);
+    model.put("minutes",minutes);
+    sendEmail(new String[]{customerEmail},EmailTemplate.REMINDER_EMAIL,model,"Reminder email");
+  }
+
   private Map<String, Object> mapAppointmnetObject(Appointment appointment){
     Map<String,Object> model =new HashMap<>();
+    model.put("id",appointment.getId());
     model.put("name",appointment.getCustomer().getName());
     model.put("email",appointment.getCustomer().getEmail());
     model.put("gender",appointment.getCustomer().getGender());
@@ -83,6 +91,10 @@ public class EmailService {
           message.setSubject(subject);
         };
     log.info("Sending mail from {} to {}, template {}", from, to, template);
+    try{
     this.mailSender.send(mimeMessagePreparator);
+    }catch (Exception e){
+      log.error("Error occurred while sending email",e);
+    }
   }
 }

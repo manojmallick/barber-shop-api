@@ -8,20 +8,20 @@
 <p th:text="#{greeting(${name})}">
   Hello, ${name}
 </p>
-  Hey! you have booking in ${hours}.
+  Hey! you have booking starts in ${minutes} minutes Today.
 
 <p>Your booking details are:</p>
 <p class="title">appointment details</p>
 <div>
   <div>
     <div>
-      <p>Booking Reference number: ${ id }</p>
-      <p>Name: ${ name }</p>
-      <p>Email id: ${ email }</p>
-      <p>Phone Number: ${ mobile }</p>
-      <p>Gender: ${ gender }</p>
-      <p>Your Stylish:${ barberName }</p>
-      <p>Date and Time: ${bookingDate} at ${ bookingTime }</p>
+      <p>Booking Reference number: ${id}</p>
+      <p>Name: ${name}</p>
+      <p>Email id: ${email}</p>
+      <p>Phone Number: ${mobile}</p>
+      <p>Gender: ${gender}</p>
+      <p>Your Stylish:${barberName}</p>
+      <p>Date and Time: ${bookingDate} at ${bookingTime}</p>
     </div>
   </div>
   <p>
