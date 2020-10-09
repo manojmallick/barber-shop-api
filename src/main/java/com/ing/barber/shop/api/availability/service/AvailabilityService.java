@@ -14,6 +14,7 @@ import com.ing.barber.shop.api.util.BarberShopApiUtil;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -99,8 +100,22 @@ public class AvailabilityService {
         time -> {
           List<Appointment> currentAppointment =
               filterAppointmentsWithDateSlot(appointments, dateSlot, time);
+          SimpleDateFormat simpleDateFormat =
+              new SimpleDateFormat(BarberShopApiConstants.YYYY_MM_DD);
+          SimpleDateFormat simpleTimeFormat = new SimpleDateFormat(BarberShopApiConstants.HH_MM);
+          Date date = new Date();
+          String todayDate = simpleDateFormat.format(date);
+          String currentTime = simpleTimeFormat.format(date);
           if (currentAppointment.size() != barbers.size()) {
-            slot.add(time);
+            // check if the date is today and time
+
+            if (!todayDate.equalsIgnoreCase(dateSlot)) {
+              if (barberShopApiUtil.isValidTimeSlot(currentTime, time)) {
+                slot.add(time);
+              }
+            } else {
+              slot.add(time);
+            }
           }
           barbers.forEach(
               barber -> {
@@ -110,7 +125,13 @@ public class AvailabilityService {
                                 appointment.getBarber().getId().equalsIgnoreCase(barber.getId()))
                         .count()
                     == 0) {
-                  barberTimeSlot.get(barber.getId()).add(time);
+                  if (!todayDate.equalsIgnoreCase(dateSlot)) {
+                    if (barberShopApiUtil.isValidTimeSlot(currentTime, time)) {
+                      barberTimeSlot.get(barber.getId()).add(time);
+                    }
+                  } else {
+                    barberTimeSlot.get(barber.getId()).add(time);
+                  }
                 }
               });
         });

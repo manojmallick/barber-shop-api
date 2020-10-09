@@ -116,7 +116,7 @@ public class AppointmentServiceTest {
     Appointment appointmentRequest = getAppointment();
     appointmentRequest.setStartTime("10:30");
     appointmentRequest.setBarber(getBarber());
-    appointmentRequest.setCustomer( getCustomer() );
+    appointmentRequest.setCustomer(getCustomer());
     Set<String> timeSlots = getTimeSlots();
 
     // mock
@@ -136,10 +136,10 @@ public class AppointmentServiceTest {
 
     // assert
     exceptionRule.expect(ResourceAlreadyExists.class);
-    exceptionRule.expectMessage(
-        is(BarberShopApiConstants.BOOKING_ALREADY_EXIST_FOR_THE_CUSTOMER));
+    exceptionRule.expectMessage(is(BarberShopApiConstants.BOOKING_ALREADY_EXIST_FOR_THE_CUSTOMER));
     exceptionRule.expect(hasProperty("errorCodes"));
-    exceptionRule.expect(hasProperty("errorCodes", is(ErrorCodes.ERROR_DUPLICATE_BOOKING_CUSTOMER)));
+    exceptionRule.expect(
+        hasProperty("errorCodes", is(ErrorCodes.ERROR_DUPLICATE_BOOKING_CUSTOMER)));
 
     // method call
     appointmentService.saveAppointment(appointmentRequest);

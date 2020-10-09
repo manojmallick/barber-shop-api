@@ -241,9 +241,7 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
       HttpStatus status,
       WebRequest request) {
 
-    log.debug(
-        "No Handler Found Exception. [ exception={}]",
-        noHandlerFoundException);
+    log.debug("No Handler Found Exception. [ exception={}]", noHandlerFoundException);
     List<String> details = new ArrayList<String>();
     details.add(
         String.format(
@@ -298,9 +296,7 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler({Exception.class})
   public ResponseEntity<Object> handleAll(Exception exception, WebRequest request) {
 
-    log.error(
-        "Request to REST API failed. [ exception={}]",
-        exception);
+    log.error("Request to REST API failed. [ exception={}]", exception);
     List<String> details = new ArrayList<String>();
 
     ApiError err =

@@ -10,8 +10,11 @@ Helping every barber who want him to have a online presence in this competitive 
 Build status of continus integration
 To be added
 ## Screenshots
-To Be added
-
+![title](picture/1.png)
+![title](picture/2.png)
+![title](picture/3.png)
+![title](picture/4.png)
+![title](picture/5.png)
 ##Live Demo
 To be added
 
@@ -37,12 +40,17 @@ Helping out all the barbers out there who cannot invest money.(It contains only 
 - The customer can either pick a time slot where he will be able to see which barber is available or be able to select a barber and see his schedule. The barbers should be ordered by experience_level. It's up to you what defaults you choose, but hey Edwin does care about the customer journey, or as he likes to call it, "The clever stuff"!
 
 #### Phase 3
-- As a shop owner, I want to be able to see metrics about the barbers, clients and appointments.
-- As a customer, I want to be able to change, update or delete my appointment
-- As a customer, I want to receive a reminder 1 hour before my appointment.
-- As a customer, I want to be do recurring bookings. Let's say every 2 weeks or perhaps every Month.
-- As a shop owner, I want customers to be able to join a wait list if no bookings are available.
+- As a customer, I want to receive a reminder 1 hour before my appointment. 
 
+#### Additional Futures
+- Shop page is configurable i.e. user shop owner can add more stores(all other entities will work around the shop id)
+- Services are added from the api side , but ui its penning
+- The user will get email after booking confirmation
+
+### Technical features
+- added with swagger support [Host]/api/swagger-ui.html
+- added with docker configuration to be deployed to dev and prod
+- added 
 ## Installation
 Provide step by step series of examples and explanations about how to get a development env running.
 
@@ -71,7 +79,7 @@ port can be update by  docker compose file/ .env file in root.
 
 To check the code ide like Intelij or Eclipse , lombok is to be installed 
 
-- Other way
+###Other way
 
 - Java
 - Maven
@@ -80,7 +88,7 @@ To check the code ide like Intelij or Eclipse , lombok is to be installed
 
 ## Credits
 Thank you all who like my project. 
-
+![title](picture/6.gif)
 #### Anything else that seems useful
 
 ## License

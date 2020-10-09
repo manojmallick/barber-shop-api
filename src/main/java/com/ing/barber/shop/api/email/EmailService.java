@@ -5,7 +5,6 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -29,36 +28,38 @@ public class EmailService {
   private String from;
 
   @Autowired
-  public EmailService(JavaMailSender mailSender,
-      VelocityEngine velocityEngine) {
+  public EmailService(JavaMailSender mailSender, VelocityEngine velocityEngine) {
     this.mailSender = mailSender;
     this.velocityEngine = velocityEngine;
   }
 
-  public void sendConfirmationEmail(Appointment appointment){
-    String customerEmail=appointment.getCustomer().getEmail();
-    sendEmail(new String[]{customerEmail},EmailTemplate.CONFIRMATION_EMAIL,mapAppointmnetObject(appointment),"Conformation email");
+  public void sendConfirmationEmail(Appointment appointment) {
+    String customerEmail = appointment.getCustomer().getEmail();
+    sendEmail(
+        new String[] {customerEmail},
+        EmailTemplate.CONFIRMATION_EMAIL,
+        mapAppointmnetObject(appointment),
+        "Conformation email");
   }
 
-  public void sendReminderEmail(Appointment appointment,long minutes){
-    String customerEmail=appointment.getCustomer().getEmail();
-    Map<String,Object> model=mapAppointmnetObject(appointment);
-    model.put("minutes",minutes);
-    sendEmail(new String[]{customerEmail},EmailTemplate.REMINDER_EMAIL,model,"Reminder email");
+  public void sendReminderEmail(Appointment appointment, long minutes) {
+    String customerEmail = appointment.getCustomer().getEmail();
+    Map<String, Object> model = mapAppointmnetObject(appointment);
+    model.put("minutes", minutes);
+    sendEmail(new String[] {customerEmail}, EmailTemplate.REMINDER_EMAIL, model, "Reminder email");
   }
 
-  private Map<String, Object> mapAppointmnetObject(Appointment appointment){
-    Map<String,Object> model =new HashMap<>();
-    model.put("id",appointment.getId());
-    model.put("name",appointment.getCustomer().getName());
-    model.put("email",appointment.getCustomer().getEmail());
-    model.put("gender",appointment.getCustomer().getGender());
-    model.put("mobile",appointment.getCustomer().getMobile());
-    model.put("barberName",appointment.getBarber().getName());
-    model.put("bookingDate",appointment.getBookingDate());
-    model.put("bookingTime",appointment.getStartTime());
+  private Map<String, Object> mapAppointmnetObject(Appointment appointment) {
+    Map<String, Object> model = new HashMap<>();
+    model.put("id", appointment.getId());
+    model.put("name", appointment.getCustomer().getName());
+    model.put("email", appointment.getCustomer().getEmail());
+    model.put("gender", appointment.getCustomer().getGender());
+    model.put("mobile", appointment.getCustomer().getMobile());
+    model.put("barberName", appointment.getBarber().getName());
+    model.put("bookingDate", appointment.getBookingDate());
+    model.put("bookingTime", appointment.getStartTime());
     return model;
-
   }
 
   private String getTemplateLocation(EmailTemplate emailTemplates) {
@@ -91,10 +92,10 @@ public class EmailService {
           message.setSubject(subject);
         };
     log.info("Sending mail from {} to {}, template {}", from, to, template);
-    try{
-    this.mailSender.send(mimeMessagePreparator);
-    }catch (Exception e){
-      log.error("Error occurred while sending email",e);
+    try {
+      this.mailSender.send(mimeMessagePreparator);
+    } catch (Exception e) {
+      log.error("Error occurred while sending email", e);
     }
   }
 }
