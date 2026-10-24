@@ -1,95 +1,172 @@
-## Barber Shop
-```
-He wants you to create a booking system that will allow his customers to book an appointment with a barber of their preference. 
-he can't really gather any information on customer's satisfaction, send them reminders or collect any other useful metrics to boost his business...
-```
-With that said, I guess we should start with helping him! We first begin by splitting the work into smaller chunks, because, you know...agile! We then mix in some priority and call them **phases**. So, let's start!
-## Motivation
-Helping every barber who want him to have a online presence in this competitive world.
-## Build status
-Build status of continus integration
-To be added
-## Screenshots
-![title](picture/1.png)
-![title](picture/2.png)
-![title](picture/3.png)
-![title](picture/4.png)
-![title](picture/5.png)
-##Live Demo
-To be added
+# Barber Shop API
 
-## Tech/framework used
-<b>Built with</b>
-- Java
-- Spring Boot
-- Spring Framework
-- REST
-- Swagger
-- Docker
-- Mongo DB
-- Junit
-- Mockito
-- log4j2
+REST backend for a barber-shop booking system. Customers can see which barbers are free, book a 30-minute appointment with one, get a confirmation email, and receive a reminder an hour before the appointment.
+
+The matching Angular UI lives in [barber-shop-client](https://github.com/manojmallick/barber-shop-client).
+
+> **The brief:** a shop owner wants a booking system where customers book with the barber of their choice. He can't collect customer feedback, send reminders or gather any metrics to grow his business. The work was split into phases, below.
 
 ## Features
-Helping out all the barbers out there who cannot invest money.(It contains only one part of the full application i.e. API )
-#### Phase 1
-- In this first phase, the least that we can do is to appoint the customer a barber that is available. Each booking must claim a time slot of 30 minutes.
 
-#### Phase 2
-- The customer can either pick a time slot where he will be able to see which barber is available or be able to select a barber and see his schedule. The barbers should be ordered by experience_level. It's up to you what defaults you choose, but hey Edwin does care about the customer journey, or as he likes to call it, "The clever stuff"!
+### Delivered
 
-#### Phase 3
-- As a customer, I want to receive a reminder 1 hour before my appointment. 
+| Phase | Capability |
+|---|---|
+| 1 | Book a barber. If you don't pick one, or your pick is busy, an available barber is assigned automatically. Every booking claims a 30-minute slot. |
+| 2 | See availability for a date (or date range) per shop, with each barber's schedule. Barbers carry an `experience` level. |
+| 3 | Email reminder about one hour before the appointment (scheduled job). |
+| Extra | Multi-shop: every barber, service and appointment belongs to a shop (`shopId`). |
+| Extra | Confirmation email after booking (Velocity/Thymeleaf templates, SMTP). |
+| Extra | Services (for example haircut types) are served from the API. |
+| Extra | Validated requests with a consistent JSON error format. |
+| Extra | Swagger UI, Actuator health endpoint, Docker setup for dev and prod. |
 
-#### Additional Futures
-- Shop page is configurable i.e. user shop owner can add more stores(all other entities will work around the shop id)
-- Services are added from the api side , but ui its penning
-- The user will get email after booking confirmation
+### Not yet built
 
-### Technical features
-- added with swagger support [Host]/api/swagger-ui.html
-- added with docker configuration to be deployed to dev and prod
-- added 
-## Installation
-Provide step by step series of examples and explanations about how to get a development env running.
+- Customer self-service to change or cancel an appointment
+- Recurring bookings, waiting list
+- Shop-owner metrics
+- UI for managing services (the API side exists)
 
-Multiple ways to run the application 
-- Docker way
+## Tech stack
 
-I have created two scripts & two bat files
-After in the root 
+Java 8, Spring Boot 2.2.5 (Web, Data MongoDB, Actuator, Mail, Thymeleaf), MongoDB 4.2, Springfox Swagger 2, Lombok, log4j2, JUnit and Mockito, Maven (wrapper included), Docker and Docker Compose.
+
+## Quick start (Docker)
+
+You need Docker with Compose, and a JDK (the scripts run `./mvnw` to build the jar before Docker packages it).
+
+```bash
+git clone https://github.com/manojmallick/barber-shop-api.git
+cd barber-shop-api
+
+# 1. Set your database credentials and port
+#    (see "Configuration" below)
+$EDITOR .env
+
+# 2a. Development (API on http://localhost:8080)
+sh ./run-dev.sh
+
+# 2b. Production-style (API on http://localhost:8088)
+sh ./run.sh
 ```
-sh ./run-dev.sh   #this is for local dev(port :8088)
-sh ./run.sh       #this for prod env(port:8080)
 
-or
+On Windows use `run-dev.bat` or `run.bat`. If the shell scripts are not executable, run `chmod +x run.sh run-dev.sh` first.
 
-chmod +x run.sh
-./run.sh
+Both scripts build the jar (`./mvnw clean install`) and start the API together with a MongoDB container. MongoDB is seeded with sample barbers, services and a shop from `docker/barber/init-scripts/mongodb-init.js`.
 
-or
+Check that it is up:
 
-./mvnw.cmd clean install
-docker-compose -f docker-compose-dev.yml up -d --build
+```bash
+curl http://localhost:8080/api/actuator/health     # dev
+curl http://localhost:8088/api/actuator/health     # prod
+```
 
-``` 
+> The API is served under the `/api` context path.
 
-port can be update by  docker compose file/ .env file in root.
+## Run without Docker
 
-To check the code ide like Intelij or Eclipse , lombok is to be installed 
+Requirements: JDK 8+, Maven (or the included `./mvnw`), a running MongoDB, and Lombok support in your IDE (IntelliJ or Eclipse plugin).
 
-###Other way
+```bash
+export MONGO_DB_HOST=localhost MONGO_DB_PORT=27017
+export MONGO_DB_USERNAME=<user> MONGO_DB_PASSWORD=<password> MONGO_DB_DATABASE=barber
+./mvnw spring-boot:run
+```
 
-- Java
-- Maven
-- IDE(optional)
+The app listens on `APP_PORT` (default `8080`).
 
+## Configuration
 
-## Credits
-Thank you all who like my project. 
-![title](picture/6.gif)
-#### Anything else that seems useful
+Docker Compose reads these from `.env` in the project root; the app reads the `MONGO_DB_*`, `LOG_LEVEL` and `APP_PORT` equivalents (see `src/main/resources/application.properties`).
+
+| `.env` variable | App setting | Meaning | Default in app |
+|---|---|---|---|
+| `DB_HOST` | `MONGO_DB_HOST` | MongoDB host | `localhost` |
+| `DB_PORT` | `MONGO_DB_PORT` | MongoDB port | `27017` |
+| `DB_USERNAME` | `MONGO_DB_USERNAME` | MongoDB user | `root` |
+| `DB_PASSWORD` | `MONGO_DB_PASSWORD` | MongoDB password | none, set it |
+| `DB_DATABASE` | `MONGO_DB_DATABASE` | Database name | `barber` |
+| `LOG_LEVEL` | `LOG_LEVEL` | Log level | `DEBUG` |
+| `APP_PORT` | `APP_PORT` | HTTP port | `8080` |
+
+Email (booking confirmation and reminders) is configured with the `mail.*` properties in `application.properties` (SMTP host, port, username, password, sender address). Set these to your own SMTP provider before relying on email.
+
+## API
+
+Base path: `/api`. Interactive docs: **`/api/swagger-ui.html`**.
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/v1/shops` | List shops |
+| `GET` | `/v1/barbers` | List barbers, most experienced first |
+| `GET` | `/v1/services` | List services (JSON or XML) |
+| `GET` | `/v1/availabilities` | Availability for a date. Query: `bookingDate` (`yyyy-MM-dd`, today or later, required), `endDate` (optional, same format), `shopId` (required, must exist) |
+| `POST` | `/v1/appointments` | Create an appointment |
+| `GET` | `/v1/appointments` | List appointments |
+| `GET` | `/v1/appointments/{id}` | Get one appointment |
+
+### Example: check availability
+
+```bash
+curl "http://localhost:8080/api/v1/availabilities?bookingDate=2030-01-15&shopId=<SHOP_ID>"
+```
+
+### Example: book an appointment
+
+`customer.name`, `customer.gender`, `customer.mobile`, `shop`, `startTime` and `bookingDate` are required; `barber` and `services` are optional (a free barber is assigned when `barber` is omitted or already booked), and `customer.email` is optional but needed for the confirmation and reminder emails. Get valid shop, barber and service IDs from the list endpoints above. The exact request schema is in Swagger UI.
+
+```bash
+curl -X POST http://localhost:8080/api/v1/appointments \
+  -H "Content-Type: application/json" \
+  -d '{
+        "customer": { "name": "Jane Doe", "gender": "female",
+                      "mobile": "0612345678", "email": "jane@example.com" },
+        "shop":     { "id": "<SHOP_ID>" },
+        "barber":   { "id": "<BARBER_ID>" },
+        "services": [ { "id": "<SERVICE_ID>" } ],
+        "startTime": "10:00",
+        "bookingDate": "2030-01-15"
+      }'
+```
+
+### Errors
+
+Validation and lookup failures return a structured JSON error (`ApiError`) with an error code and message, for example a missing query parameter, an invalid date, or a shop or appointment that does not exist.
+
+## How reminders work
+
+A scheduled job (`ScheduledTasks`) runs every 30 minutes during opening hours (weekdays and weekends have separate cron windows). It loads today's appointments and sends a reminder email to those starting within the next hour.
+
+## Project structure
+
+```
+src/main/java/com/ing/barber/shop/api/
+├── appointment/    Controller, service, repository, model
+├── availability/   Availability calculation and endpoint
+├── barber/         Barbers and their schedules
+├── shop/           Shops
+├── services/       Services offered
+├── email/          SMTP config, templates, email service
+├── scheduler/      Reminder job
+├── config/         Mongo, CORS, Swagger, Velocity, properties
+├── error/          Exceptions, error codes, global handler
+└── beans/          Customer, Day, Schedule
+docker/barber/init-scripts/mongodb-init.js   Sample data
+```
+
+## Tests
+
+```bash
+./mvnw test
+```
+
+Unit tests cover the appointment, availability, barber, services and shop services, the error handler and utilities (JUnit and Mockito).
+
+## Roadmap
+
+See "Not yet built" above. Other ideas: authentication for shop owners, a CI pipeline and build badge, and a hosted demo.
 
 ## License
+
 MIT © [Manoj Mallick](https://github.com/manojmallick)
