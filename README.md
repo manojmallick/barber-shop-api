@@ -40,8 +40,9 @@ You need Docker with Compose, and a JDK (the scripts run `./mvnw` to build the j
 git clone https://github.com/manojmallick/barber-shop-api.git
 cd barber-shop-api
 
-# 1. Set your database credentials and port
-#    (see "Configuration" below)
+# 1. Create your .env from the template and set the database password and port
+#    (see "Configuration" below). .env is git-ignored.
+cp .env.example .env
 $EDITOR .env
 
 # 2a. Development (API on http://localhost:8080)
@@ -78,7 +79,7 @@ The app listens on `APP_PORT` (default `8080`).
 
 ## Configuration
 
-Docker Compose reads these from `.env` in the project root; the app reads the `MONGO_DB_*`, `LOG_LEVEL` and `APP_PORT` equivalents (see `src/main/resources/application.properties`).
+Docker Compose reads these from `.env` in the project root (create it with `cp .env.example .env`; it is not committed); the app reads the `MONGO_DB_*`, `LOG_LEVEL` and `APP_PORT` equivalents (see `src/main/resources/application.properties`).
 
 | `.env` variable | App setting | Meaning | Default in app |
 |---|---|---|---|

@@ -34,3 +34,6 @@ build/
 
 logs
 /.mvn/wrapper/maven-wrapper.jar
+
+# Local environment (copy .env.example)
+.env
